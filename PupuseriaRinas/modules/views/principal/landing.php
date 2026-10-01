@@ -78,7 +78,7 @@ if ($pdoLanding) {
 
             <div class="col-12 col-md-4">
                 <a href="ubicacion.php" class="rinas-card">
-                    <img class="rinas-card-foto" src="assets/img/galeria_1_600.jpg"
+                    <img class="rinas-card-foto" src="assets/img/UBICACION LANDING.png"
                          alt="" aria-hidden="true" loading="lazy" decoding="async">
                     <span class="rinas-card-contenido">
                         <span class="rinas-card-icon" aria-hidden="true">
@@ -99,7 +99,7 @@ if ($pdoLanding) {
 
             <div class="col-12 col-md-4">
                 <a href="nosotros.php" class="rinas-card">
-                    <img class="rinas-card-foto" src="assets/img/pexels-noevillaltaphotography-9216207.jpg"
+                    <img class="rinas-card-foto" src="assets/img/ACERCA DE NOSOTROS LANDING.png"
                          alt="" aria-hidden="true" loading="lazy" decoding="async">
                     <span class="rinas-card-contenido">
                         <span class="rinas-card-icon" aria-hidden="true">
@@ -121,6 +121,83 @@ if ($pdoLanding) {
         </div>
     </div>
 </section>
+
+<!-- =========================================================
+     Galería: carrusel principal sincronizado con miniaturas (Splide)
+     ========================================================= -->
+<section class="landing-galeria-rinas" aria-labelledby="galeriaTitulo">
+    <div class="container">
+        <span class="landing-galeria-eyebrow">Galería</span>
+        <h2 class="landing-galeria-title" id="galeriaTitulo">Directo desde nuestro comal</h2>
+        <p class="landing-galeria-lead mb-4">Pupusas recién hechas, licuados naturales y el ambiente de la casa.</p>
+
+        <div id="main-slider" class="splide" aria-label="Galería de Pupusería Rinas">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    <li class="splide__slide"><img src="assets/img/galeria/pupusas-comal.jpg" alt="Pupusas recién salidas del comal"></li>
+                    <li class="splide__slide"><img src="assets/img/galeria/pupusas-mesa.jpg" alt="El ambiente de la casa" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/pupa_camaron.png" alt="Pupusa de camarón Sabor Mediterráneo" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/pupa_chile.png" alt="Pupusa de chile" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/licuado.png" alt="Licuado clásico con banana" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/galeria_1_600.jpg" alt="Ambiente Pupusería Rinas" loading="lazy"></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="thumbnail-slider" class="splide" aria-label="Ir a la imagen de la galería">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    <li class="splide__slide"><img src="assets/img/galeria/pupusas-comal.jpg" alt=""></li>
+                    <li class="splide__slide"><img src="assets/img/galeria/pupusas-mesa.jpg" alt="" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/pupa_camaron.png" alt="" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/pupa_chile.png" alt="" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/licuado.png" alt="" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/galeria_1_600.jpg" alt="" loading="lazy"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="<?= LINK_SPLIDE_JS ?>"></script>
+<script>
+(function(){
+  if (!window.Splide) return; // CDN caído: no romper el resto de la página
+
+  var main = new Splide( '#main-slider', {
+    type       : 'fade',
+    heightRatio: 0.45,
+    pagination : false,
+    arrows     : false,
+    cover      : true,
+  } );
+
+  var thumbnails = new Splide( '#thumbnail-slider', {
+    rewind          : true,
+    fixedWidth      : 104,
+    fixedHeight     : 58,
+    isNavigation    : true,
+    gap             : 10,
+    focus           : 'center',
+    pagination      : false,
+    cover           : true,
+    dragMinThreshold: {
+      mouse: 4,
+      touch: 10,
+    },
+    breakpoints : {
+      640: {
+        fixedWidth  : 66,
+        fixedHeight : 38,
+      },
+    },
+  } );
+
+  main.sync( thumbnails );
+  main.mount();
+  thumbnails.mount();
+})();
+</script>
 
 <section class="destacado-rinas py-4 py-md-5">
     <div class="">

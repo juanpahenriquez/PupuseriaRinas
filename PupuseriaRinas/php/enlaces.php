@@ -2,7 +2,8 @@
 /**
  * Enlaces externos centralizados (CDN) + <head> público.
  * Constantes: LINK_BOOTSTRAP_CSS, LINK_BOOTSTRAP_JS, LINK_SWEETALERT_CSS,
- *             LINK_SWEETALERT_JS, LINK_APEXCHARTS_JS.
+ *             LINK_SWEETALERT_JS, LINK_APEXCHARTS_JS, LINK_SPLIDE_CSS,
+ *             LINK_SPLIDE_JS.
  */
 
 define('LINK_BOOTSTRAP_VERSION', '5.3.3');
@@ -26,8 +27,13 @@ define('LINK_DROPZONE', 'https://unpkg.com/dropzone@' . LINK_DROPZONE_VERSION . 
 define('LINK_DROPZONE_CSS', LINK_DROPZONE . '/dropzone.min.css');
 define('LINK_DROPZONE_JS', LINK_DROPZONE . '/dropzone.min.js');
 
+define('LINK_SPLIDE_VERSION', '4.1.3');
+define('LINK_SPLIDE', 'https://cdn.jsdelivr.net/npm/@splidejs/splide@' . LINK_SPLIDE_VERSION . '/dist');
+define('LINK_SPLIDE_CSS', LINK_SPLIDE . '/css/splide.min.css');
+define('LINK_SPLIDE_JS', LINK_SPLIDE . '/js/splide.min.js');
+
 // Versión única del CSS propio (público + admin) para romper cachés al desplegar
-define('LINK_CSS_VERSION', '33');
+define('LINK_CSS_VERSION', '38');
 
 if (!function_exists('rinas_head_publico')) {
     function rinas_head_publico(string $customCss = 'assets/css/custom.css?v=' . LINK_CSS_VERSION): void
@@ -37,6 +43,7 @@ if (!function_exists('rinas_head_publico')) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="<?= LINK_BOOTSTRAP_CSS ?>" rel="stylesheet">
         <link href="<?= $customCss ?>" rel="stylesheet">
+        <link href="<?= LINK_SPLIDE_CSS ?>" rel="stylesheet">
         <?php
     }
 }

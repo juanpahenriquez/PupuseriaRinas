@@ -127,3 +127,77 @@
         </div>
     </div>
 </section>
+
+<!-- Lightbox para ampliar las fotos de la galería -->
+<div class="lightbox-rinas" id="lightboxRinas" hidden>
+    <button class="lightbox-cerrar" type="button" aria-label="Cerrar imagen ampliada">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <button class="lightbox-flecha lightbox-prev" type="button" aria-label="Imagen anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <figure class="lightbox-figura">
+        <img id="lightboxImg" src="" alt="">
+        <figcaption id="lightboxPie"></figcaption>
+    </figure>
+    <button class="lightbox-flecha lightbox-next" type="button" aria-label="Imagen siguiente">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+</div>
+
+<script>
+(function () {
+  var overlay = document.getElementById('lightboxRinas');
+  var img = document.getElementById('lightboxImg');
+  var pie = document.getElementById('lightboxPie');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.galeria-card'));
+  if (!overlay || cards.length === 0) return;
+
+  var idx = 0;
+  var focoPrevio = null;
+
+  function abrir(i) {
+    idx = (i + cards.length) % cards.length;
+    var foto = cards[idx].querySelector('img');
+    var cap = cards[idx].querySelector('figcaption');
+    img.src = foto.dataset.full || foto.src;
+    img.alt = foto.alt;
+    pie.textContent = cap ? cap.textContent : '';
+    focoPrevio = document.activeElement;
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+    overlay.querySelector('.lightbox-cerrar').focus();
+  }
+
+  function cerrar() {
+    overlay.hidden = true;
+    document.body.style.overflow = '';
+    img.src = '';
+    if (focoPrevio) focoPrevio.focus();
+  }
+
+  function mover(d) { abrir(idx + d); }
+
+  cards.forEach(function (fig, i) {
+    fig.setAttribute('tabindex', '0');
+    fig.setAttribute('role', 'button');
+    var cap = fig.querySelector('figcaption');
+    fig.setAttribute('aria-label', 'Ampliar: ' + (cap ? cap.textContent : 'imagen de la galería'));
+    fig.addEventListener('click', function () { abrir(i); });
+    fig.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(i); }
+    });
+  });
+
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) cerrar(); });
+  overlay.querySelector('.lightbox-cerrar').addEventListener('click', cerrar);
+  overlay.querySelector('.lightbox-prev').addEventListener('click', function () { mover(-1); });
+  overlay.querySelector('.lightbox-next').addEventListener('click', function () { mover(1); });
+  document.addEventListener('keydown', function (e) {
+    if (overlay.hidden) return;
+    if (e.key === 'Escape') cerrar();
+    else if (e.key === 'ArrowLeft') mover(-1);
+    else if (e.key === 'ArrowRight') mover(1);
+  });
+})();
+</script>
