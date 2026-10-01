@@ -1,0 +1,920 @@
+/* Admin Pupusería Rinas — solo diseño, reutiliza variables de custom.css */
+.admin-body {
+    background-color: var(--rinas-crema);
+    font-family: var(--font-principal);
+    min-height: 100vh;
+}
+
+/* Anchos del sidebar: expandido y rail de solo iconos */
+:root {
+    --admin-sidebar-w: 280px;
+    --admin-rail-w: 68px;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--admin-sidebar-w);
+    background-color: var(--rinas-azul);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    z-index: 1040;
+    overflow: hidden;
+    transition: width 0.28s ease, transform 0.28s ease;
+}
+
+.admin-sidebar-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    min-height: 70px;
+}
+
+.admin-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(245, 158, 11, 0.6);
+    flex: 0 0 auto;
+}
+
+/* La marca cede espacio: si el texto no cabe se recorta con puntos suspensivos
+   en vez de cortarse a media palabra */
+.admin-brand {
+    line-height: 1;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.admin-brand-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-brand-sub {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Botón colapsar / expandir (dentro del sidebar) */
+.admin-sidebar-toggle {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.admin-sidebar-toggle:hover,
+.admin-sidebar-toggle:focus-visible {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--rinas-naranja);
+}
+
+/* Por defecto (expandido) se ve la flecha que colapsa */
+.admin-ico-expandir { display: none; }
+
+.admin-nav {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.75rem 0;
+}
+
+.admin-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.72rem 1.25rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+    border-left: 3px solid transparent;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.admin-nav-link i {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+    font-size: 1rem;
+    text-align: center;
+    opacity: 0.9;
+}
+
+.admin-nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    color: #fff;
+}
+
+.admin-nav-link.active {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: var(--rinas-naranja);
+    border-left-color: var(--rinas-naranja);
+}
+
+.admin-nav-link.active i { opacity: 1; }
+
+.admin-sidebar-foot {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.admin-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    min-width: 0;
+}
+
+.admin-user-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--rinas-naranja);
+    color: #000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    flex: 0 0 auto;
+}
+
+.admin-user-info { min-width: 0; line-height: 1.15; }
+
+.admin-user-name {
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-user-email {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.85rem;
+    padding: 0.45rem 0.5rem;
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.admin-logout:hover {
+    background: var(--rinas-naranja);
+    border-color: var(--rinas-naranja);
+}
+
+.admin-logout i { font-size: 0.85rem; }
+
+/* Topbar */
+.admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(11, 11, 69, 0.1);
+    padding: 0.7rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.admin-topbar-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--rinas-azul);
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.admin-topbar-sub {
+    font-size: 0.82rem;
+    color: #6c757d;
+    margin: 0.15rem 0 0;
+}
+
+/* En escritorio el sidebar nunca desaparece del todo (queda en rail),
+   así que el botón del topbar solo hace falta en móvil */
+.admin-burger {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000;
+    background-color: #fff;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+.admin-burger svg { width: 20px; height: 20px; }
+
+.admin-content {
+    padding: 1.5rem;
+    flex: 1 1 auto;
+}
+
+/* Cards KPI */
+.admin-kpi {
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    height: 100%;
+}
+
+.admin-kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.admin-kpi-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.admin-kpi-icon svg { width: 18px; height: 18px; }
+
+.admin-kpi-icon.naranja { background-color: #FFF4DC; color: var(--rinas-naranja); border: 1px solid rgba(245,158,11,0.35); }
+.admin-kpi-icon.azul { background-color: #E8E8F5; color: var(--rinas-azul); border: 1px solid rgba(11,11,69,0.15); }
+.admin-kpi-icon.crema { background-color: #FFF6D3; color: var(--rinas-azul); border: 1px solid rgba(11,11,69,0.12); }
+
+.admin-kpi-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6c757d;
+}
+
+.admin-kpi-value {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #111;
+    line-height: 1;
+}
+
+.admin-kpi-trend {
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.admin-kpi-trend.up { color: #0a7a42; }
+.admin-kpi-trend.down { color: #c0392b; }
+
+.admin-kpi--accent {
+    border-left: 4px solid var(--rinas-naranja);
+    box-shadow: 0 8px 20px rgba(11,11,69,0.06);
+}
+.admin-kpi--premium {
+    border-left: 4px solid var(--rinas-naranja);
+    box-shadow: 0 10px 24px rgba(11,11,69,0.08);
+    position: relative;
+    overflow: hidden;
+}
+.admin-kpi--premium::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+.admin-kpi-spark {
+    height: 42px;
+    margin-top: 2px;
+    opacity: 0.95;
+}
+/* Sparkline lo dibuja ApexCharts dentro de .admin-kpi-spark */
+.admin-kpi:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(11,11,69,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-panel--elevated {
+    box-shadow: 0 8px 20px rgba(11,11,69,0.07);
+    border: 1px solid #000;
+}
+
+/* Panel */
+.admin-panel {
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 1.25rem;
+}
+
+.admin-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.admin-panel-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #111;
+    margin: 0;
+}
+
+/* Tabla */
+.admin-table {
+    font-size: 0.88rem;
+}
+
+.admin-table thead th {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6c757d;
+    border-bottom-width: 2px;
+    white-space: nowrap;
+}
+
+.admin-table tbody td {
+    vertical-align: middle;
+}
+.admin-table tbody tr:hover {
+    background-color: #FFFBEB;
+}
+
+/* Badge estados */
+.badge-rinas {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border-radius: 50px;
+}
+
+.badge-pendiente { background-color: #FFF4DC; color: #8a5a00; border: 1px solid rgba(245,158,11,0.4); }
+.badge-cocina { background-color: #E8E8F5; color: var(--rinas-azul); border: 1px solid rgba(11,11,69,0.2); }
+.badge-listo { background-color: #E6F4EA; color: #0a7a42; border: 1px solid rgba(10,122,66,0.25); }
+.badge-entregado { background-color: #111; color: #fff; }
+
+/* Filtros pills */
+.admin-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid #000;
+    background-color: #fff;
+    color: #111;
+    cursor: pointer;
+}
+
+.admin-filter.active {
+    background-color: #000;
+    color: #fff;
+}
+
+/* Botones admin limpios */
+.btn-admin {
+    font-weight: 700;
+    border: 1px solid #000;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.55rem 1rem;
+    border-radius: 0;
+}
+
+.btn-admin--black { background-color: #000; color: #fff; }
+.btn-admin--black:hover { background-color: #fff; color: #000; }
+.btn-admin--white { background-color: #fff; color: #000; }
+.btn-admin--white:hover { background-color: #000; color: #fff; }
+.btn-admin--naranja { background-color: var(--rinas-naranja); color: #fff; border-color: var(--rinas-naranja); }
+.btn-admin--naranja:hover { background-color: var(--rinas-naranja-hover); color: #fff; }
+
+/* Producto media */
+.product-media {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #000;
+    overflow: hidden;
+}
+
+.product-media--white { background-color: #fff; }
+.product-media--naranja-light { background-color: #FEF3E2; }
+.product-media--crema { background-color: var(--rinas-crema); }
+
+.product-img-cover {
+    width: 92px;
+    height: 92px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--rinas-naranja);
+    flex: 0 0 auto;
+}
+
+.product-img-cover--azul { border-color: var(--rinas-azul); }
+
+.product-img-contain {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0.5rem;
+}
+
+.emoji-xl { font-size: 3rem; }
+
+.admin-user-badge--sm { width: 32px; height: 32px; font-size: 0.8rem; }
+.admin-user-badge--azul { background-color: #E8E8F5; color: var(--rinas-azul); }
+.admin-user-badge--naranja-light { background-color: #FFF4DC; color: #8a5a00; }
+.label-admin { letter-spacing: 0.06em; }
+.admin-logo-preview {
+    width: 64px; height: 64px; border-radius: 50%; border: 1px dashed #000;
+    display: flex; align-items: center; justify-content: center; background-color: #FFF6D3;
+}
+
+.progress-bar--naranja { background-color: var(--rinas-naranja) !important; }
+.progress-bar--azul { background-color: var(--rinas-azul) !important; }
+.progress-bar--crema { background-color: #E8E8F5 !important; }
+
+.admin-filter--pendiente { background-color: #FFF4DC; }
+.admin-filter--cocina { background-color: #E8E8F5; }
+.admin-filter--listo { background-color: #E6F4EA; }
+.admin-filter--entregado { background-color: #111; color: #fff; }
+
+/* Login */
+.admin-login-wrap {
+    min-height: 100vh;
+    background-color: var(--rinas-crema);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.admin-login-card {
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 2rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 16px 32px rgba(11,11,69,0.1);
+}
+
+.progress { height: 6px; }
+
+/* ApexCharts - Rinas theme premium */
+.apexcharts-canvas { background: transparent !important; }
+.apexcharts-tooltip { border: 1px solid #000 !important; border-radius: 0 !important; font-weight: 700; box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important; }
+.apexcharts-legend-text { font-weight: 700 !important; font-family: var(--font-principal) !important; }
+.apexcharts-gridline { stroke: rgba(11,11,69,0.07) !important; }
+#ventasChartApex, #topDonutApex, #kpiSparkVentas, #canalDonutApex, #kpiMiniDonut, #kpiTicketRadial { width: 100%; }
+#kpiSparkVentas .apexcharts-canvas, #kpiMiniDonut .apexcharts-canvas, #kpiTicketRadial .apexcharts-canvas { height: 42px !important; }
+
+/* ============================================================
+   Sidebar colapsado (escritorio): queda como rail de solo iconos
+   El estado vive en <html class="admin-menu-cerrado"> porque se aplica
+   desde el <head>, antes de pintar, para que no haya parpadeo.
+   ============================================================ */
+html.admin-menu-cerrado .admin-sidebar {
+    width: var(--admin-rail-w);
+}
+
+/* En el rail solo queda el botón de expandir */
+html.admin-menu-cerrado .admin-ico-colapsar { display: none; }
+html.admin-menu-cerrado .admin-ico-expandir { display: inline-block; }
+
+/* Se ocultan textos, logo y avatar: solo iconos centrados */
+html.admin-menu-cerrado .admin-logo,
+html.admin-menu-cerrado .admin-brand,
+html.admin-menu-cerrado .admin-nav-label,
+html.admin-menu-cerrado .admin-user-info,
+html.admin-menu-cerrado .admin-logout span {
+    display: none;
+}
+
+html.admin-menu-cerrado .admin-sidebar-head {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 0.5rem;
+}
+
+html.admin-menu-cerrado .admin-nav-link {
+    justify-content: center;
+    padding: 0.85rem 0.5rem;
+    border-left-width: 4px;
+}
+
+html.admin-menu-cerrado .admin-sidebar-foot {
+    padding: 0.85rem 0.5rem;
+}
+
+html.admin-menu-cerrado .admin-user,
+html.admin-menu-cerrado .admin-logout {
+    justify-content: center;
+}
+
+html.admin-menu-cerrado .admin-logout {
+    padding: 0.5rem;
+}
+
+/* El contenido se corre solo lo que ocupa el rail */
+html.admin-menu-cerrado .admin-main {
+    margin-left: var(--admin-rail-w);
+}
+
+.admin-main {
+    margin-left: var(--admin-sidebar-w);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.28s ease;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    /* En móvil no hay rail: el sidebar es un cajón que se desliza.
+       visibility con retardo: al abrir es visible de inmediato (recibe el foco),
+       al cerrar se oculta al terminar el desplazamiento. */
+    .admin-sidebar {
+        width: var(--admin-sidebar-w);
+        transform: translateX(-100%);
+        visibility: hidden;
+        box-shadow: none;
+        transition: transform 0.28s ease, visibility 0s linear 0.28s;
+    }
+    .admin-sidebar.show {
+        transform: translateX(0);
+        visibility: visible;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+        transition: transform 0.28s ease, visibility 0s linear 0s;
+    }
+    .admin-main,
+    html.admin-menu-cerrado .admin-main {
+        margin-left: 0;
+    }
+    /* En móvil el estado guardado no aplica: siempre cajón de ancho completo
+       con sus textos. También cubre el resize de escritorio a móvil. */
+    html.admin-menu-cerrado .admin-sidebar {
+        width: var(--admin-sidebar-w);
+    }
+    html.admin-menu-cerrado .admin-nav-label,
+    html.admin-menu-cerrado .admin-logo,
+    html.admin-menu-cerrado .admin-brand,
+    html.admin-menu-cerrado .admin-user-info,
+    html.admin-menu-cerrado .admin-logout span {
+        display: revert;
+    }
+    html.admin-menu-cerrado .admin-sidebar-head {
+        flex-direction: row;
+        gap: 0.6rem;
+        padding: 0.75rem;
+    }
+    html.admin-menu-cerrado .admin-nav-link {
+        justify-content: flex-start;
+        padding: 0.72rem 1.25rem;
+        border-left-width: 3px;
+    }
+    html.admin-menu-cerrado .admin-sidebar-foot {
+        padding: 1rem 1.25rem;
+    }
+    html.admin-menu-cerrado .admin-user,
+    html.admin-menu-cerrado .admin-logout {
+        justify-content: flex-start;
+    }
+    html.admin-menu-cerrado .admin-logout {
+        padding: 0.45rem 0.5rem;
+    }
+    html.admin-menu-cerrado .admin-ico-colapsar { display: inline-block; }
+    html.admin-menu-cerrado .admin-ico-expandir { display: none; }
+    .admin-burger {
+        display: inline-flex;
+    }
+    .admin-content {
+        padding: 1rem;
+    }
+    /* Evita hacer scroll del contenido con el menú abierto */
+    body.admin-menu-abierto {
+        overflow: hidden;
+    }
+}
+
+.admin-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 1035;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.28s ease, visibility 0s linear 0.28s;
+}
+
+.admin-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.28s ease, visibility 0s linear 0s;
+}
+
+/* ============================================================
+   Dropzone — carga de imagen de productos (crear / editar)
+   Solo estilo: el JS vive en modules/views/admin/productos.php
+   ============================================================ */
+.dropzone-rinas {
+    border: 2px dashed #000;
+    border-radius: 0;
+    min-height: 130px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.dropzone-rinas:hover,
+.dropzone-rinas.dz-drag-hover {
+    border-color: var(--rinas-naranja);
+}
+
+.dropzone-rinas .dz-message {
+    margin: 0;
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.dropzone-rinas .dz-message .dz-icon {
+    display: block;
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+    color: var(--rinas-azul);
+}
+
+/* La miniatura se centra y se recorta limpio */
+.dropzone-rinas .dz-preview {
+    margin: 0;
+}
+
+.dropzone-rinas .dz-preview .dz-image {
+    border-radius: 0;
+    border: 1px solid #000;
+    width: 100%;
+    height: 130px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.dropzone-rinas .dz-preview .dz-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.dropzone-rinas .dz-preview .dz-details {
+    position: static;
+    margin-top: 0.4rem;
+    text-align: left;
+    font-size: 0.72rem;
+    color: #495057;
+    opacity: 1;
+    padding: 0;
+}
+
+.dropzone-rinas .dz-preview .dz-filename {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropzone-rinas .dz-preview .dz-size {
+    margin: 0;
+    font-size: 0.7rem;
+    color: #6c757d;
+}
+
+.dropzone-rinas .dz-preview .dz-error-message {
+    font-size: 0.7rem;
+    color: #b00020;
+    margin: 0.15rem 0 0;
+}
+
+/* Quitar archivo: cuadrado y con el estilo del panel */
+.dropzone-rinas .dz-preview .dz-remove {
+    font-size: 15px;
+    text-align: center;
+    font-weight: 700;
+    border-radius: 0;
+    top: 6px;
+    right: 6px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #c0392b;
+    width: 22px;
+    height: 22px;
+    line-height: 19px;
+}
+
+.dropzone-rinas .dz-preview .dz-remove:hover {
+    background: #c0392b;
+    color: #fff;
+    border-color: #c0392b;
+}
+
+.dropzone-rinas .dz-preview .dz-success-mark,
+.dropzone-rinas .dz-preview .dz-error-mark {
+    top: 6px;
+    left: 6px;
+}
+
+/* ============================================================
+   Estado del producto — checkbox (reemplaza al <select>)
+   ============================================================ */
+.estado-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #000;
+    background: #fff;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.estado-toggle:hover { background: var(--rinas-crema); }
+
+/* El input real se oculta pero sigue siendo enfocable por teclado */
+.estado-toggle input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.estado-toggle-caja {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    border: 2px solid #000;
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+/* Marca de check al marcar */
+.estado-toggle input:checked + .estado-toggle-caja {
+    background: var(--rinas-naranja);
+    border-color: var(--rinas-naranja);
+}
+
+.estado-toggle input:checked + .estado-toggle-caja::after {
+    content: "";
+    width: 9px;
+    height: 5px;
+    border-left: 2.5px solid #000;
+    border-bottom: 2.5px solid #000;
+    transform: rotate(-45deg) translate(1px, -2px);
+}
+
+.estado-toggle input:focus-visible + .estado-toggle-caja {
+    outline: 2px solid var(--rinas-azul);
+    outline-offset: 2px;
+}
+
+.estado-toggle input:checked ~ .estado-toggle-texto {
+    color: var(--rinas-azul);
+}
+
+/* Buscador de listados */
+.admin-buscador .form-control {
+    border: 1px solid #000;
+    border-radius: 0;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    max-width: 320px;
+}
+
+.admin-buscador .form-control:focus {
+    border-color: #000;
+    box-shadow: none;
+}
+
+.admin-buscador-info {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6c757d;
+}
+
+/* Paginación de listados */
+.admin-paginacion {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.admin-paginacion .page-link {
+    border: 1px solid #000;
+    border-radius: 0;
+    background-color: #fff;
+    color: #111;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.4rem 0.7rem;
+}
+
+.admin-paginacion .page-item:first-child .page-link,
+.admin-paginacion .page-item:last-child .page-link {
+    border-radius: 0;
+}
+
+.admin-paginacion .page-link:hover {
+    background-color: var(--rinas-crema);
+    color: #111;
+}
+
+.admin-paginacion .page-item.active .page-link {
+    background-color: #000;
+    border-color: #000;
+    color: #fff;
+}
+
+.admin-paginacion .page-item.disabled .page-link {
+    background-color: #fff;
+    border-color: rgba(0, 0, 0, 0.25);
+    color: #adb5bd;
+}
+

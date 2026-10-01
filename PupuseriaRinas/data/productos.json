@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "nombre": "Pupusa de frijol con queso",
+        "descripcion": "Sin descripción",
+        "precio": "1.00",
+        "categoria": "Pupusas",
+        "estado": "Activo",
+        "imagen": "assets\/img\/pupa_camaron.png",
+        "creado": "2026-09-22 15:00:14"
+    }
+]

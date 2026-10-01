@@ -1,0 +1,712 @@
+/* ============================================================
+   POS — punto de venta
+   Se carga solo en admin/pos.php
+   ============================================================ */
+.pos-body {
+    background: #F4F1E4;
+    /* alto del topbar del panel (sticky): define el alto util de las columnas */
+    --pos-topbar-h: 4.5rem;
+}
+
+/* El contenido del admin ya trae padding: el POS usa el suyo */
+.pos-content {
+    padding: 0;
+}
+
+.pos-wrap {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0.9rem 1.5rem 2rem;
+}
+
+/* --- Avisos --- */
+.pos-flash {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid #000;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.9rem;
+}
+
+.pos-flash--ok  { background: #E6F4EA; color: #0a7a42; }
+.pos-flash--err { background: #FFF4DC; color: #8a5a00; }
+
+/* --- Rejilla principal ---
+   Ambas columnas ocupan todo el alto de la pantalla y scrollean por dentro,
+   asi catalogo y carrito pueden tener muchos elementos. */
+.pos-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 1.1rem;
+    height: calc(100vh - var(--pos-topbar-h));
+    min-height: 420px;
+}
+
+@media (max-width: 1200px) {
+    /* en una sola columna vuelve a fluir con la pagina */
+    .pos-grid {
+        grid-template-columns: minmax(0, 1fr);
+        height: auto;
+        min-height: 0;
+    }
+}
+
+/* --- Filtros --- */
+.pos-filtros {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.pos-filtro         { flex: 0 1 auto; min-width: 0; }
+.pos-filtro--buscar { flex: 1 1 260px; }
+
+.pos-filtro label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 0.3rem;
+}
+
+.pos-filtro input,
+.pos-filtro select {
+    width: 100%;
+    border: 1px solid #000;
+    border-radius: 0;
+    background: #fff;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.88rem;
+    font-family: var(--font-principal);
+}
+
+.pos-filtro input:focus,
+.pos-filtro select:focus {
+    outline: 2px solid var(--rinas-naranja);
+    outline-offset: -1px;
+}
+
+.pos-input-wrap { position: relative; }
+
+.pos-input-wrap i {
+    position: absolute;
+    left: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 0.8rem;
+    pointer-events: none;
+}
+
+.pos-input-wrap input { padding-left: 1.9rem; }
+
+.pos-conteo {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin: 0.7rem 0 0.5rem;
+}
+
+/* --- Catalogo: columna de altura completa --- */
+.pos-catalogo {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+}
+
+.pos-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    /* min-content: las filas toman el alto del contenido y el contenedor scrollea.
+       Con "auto" las tarjetas se comprimen y la imagen se aplasta a 0. */
+    grid-auto-rows: min-content;
+    align-content: start;
+    gap: 0.7rem;
+    background: #fff;
+    border: 1px solid #000;
+    padding: 0.8rem;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.pos-card {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #000;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.pos-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(11, 11, 69, 0.18);
+    border-color: var(--rinas-naranja);
+}
+
+.pos-card:focus-visible {
+    outline: 2px solid var(--rinas-azul);
+    outline-offset: 1px;
+}
+
+.pos-card[hidden] { display: none; }
+
+/* flex: 0 0 92px impide que la imagen se encoja y aplaste la tarjeta */
+.pos-card-img {
+    display: block;
+    width: 100%;
+    height: 92px;
+    flex: 0 0 92px;
+    background: var(--cat-color, #FFF4DC);
+    border-bottom: 1px solid #000;
+    overflow: hidden;
+}
+
+.pos-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pos-card-nombre {
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.2;
+    padding: 0.45rem 0.5rem 0.15rem;
+    color: var(--rinas-azul);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.pos-card-precio {
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding: 0 0.5rem 0.35rem;
+    color: #000;
+}
+
+.pos-card-cat {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #6c757d;
+    padding: 0 0.5rem 0.45rem;
+}
+
+@keyframes posSumado {
+    0%   { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.9); }
+    100% { box-shadow: 0 0 0 12px rgba(245, 158, 11, 0); }
+}
+
+.pos-card--sumado { animation: posSumado 0.4s ease; }
+
+.pos-vacio {
+    color: #6c757d;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 1.5rem 0.5rem;
+    margin: 0;
+}
+
+/* ============================================================
+   PANEL DEL CLIENTE
+   ============================================================ */
+.pos-panel {
+    background: #fff;
+    border: 2px solid var(--rinas-azul);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    box-shadow: 6px 6px 0 rgba(11, 11, 69, 0.1);
+}
+
+@media (max-width: 1200px) {
+    .pos-panel { height: auto; }
+}
+
+/* --- Cabecera con el negocio --- */
+.pos-panel-head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.85rem 1rem;
+    background: var(--rinas-azul);
+    color: #fff;
+    border-bottom: 3px solid var(--rinas-naranja);
+}
+
+.pos-negocio-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--rinas-naranja);
+    flex: 0 0 auto;
+    background: #fff;
+}
+
+.pos-negocio-datos { min-width: 0; line-height: 1.15; }
+
+.pos-negocio-nombre {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pos-negocio-sub {
+    display: block;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rinas-naranja);
+    margin-top: 0.2rem;
+}
+
+/* --- Formulario ---
+   min-height:0 es lo que permite que el carrito scrollee en vez de
+   estirar el panel. */
+.pos-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1rem;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+/* --- Bloques con micro-titulo --- */
+.pos-bloque { display: flex; flex-direction: column; gap: 0.55rem; }
+
+.pos-bloque-cab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pos-bloque-titulo {
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: #868e96;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pos-bloque-cab .pos-bloque-titulo {
+    border-bottom: 1px solid #e9e6d8;
+    flex: 1 1 auto;
+    padding-bottom: 0.35rem;
+}
+
+.pos-bloque--carrito { flex: 1 1 auto; min-height: 90px; }
+
+/* Contador de articulos */
+.pos-contador {
+    background: var(--rinas-azul);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.4rem;
+    flex: 0 0 auto;
+}
+
+/* --- Tipo de pedido: control segmentado --- */
+.pos-tipos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid #000;
+}
+
+.pos-tipo { position: relative; }
+.pos-tipo input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+
+.pos-tipo-fondo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.35rem;
+    background: #fff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.pos-tipo + .pos-tipo .pos-tipo-fondo { border-left: 1px solid #000; }
+
+.pos-tipo-fondo i { font-size: 0.9rem; color: #adb5bd; transition: color 0.15s; }
+
+.pos-tipo-fondo:hover { background: var(--rinas-crema); }
+
+.pos-tipo input:checked + .pos-tipo-fondo {
+    background: var(--rinas-azul);
+    color: #fff;
+}
+
+.pos-tipo input:checked + .pos-tipo-fondo i { color: var(--rinas-naranja); }
+
+.pos-tipo input:focus-visible + .pos-tipo-fondo {
+    outline: 2px solid var(--rinas-naranja);
+    outline-offset: -3px;
+}
+
+/* --- Campos con icono --- */
+.pos-campos { display: flex; flex-direction: column; gap: 0.45rem; }
+
+.pos-campo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #000;
+    background: #FFFDF5;
+    padding: 0 0.6rem;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.pos-campo:focus-within {
+    border-color: var(--rinas-naranja);
+    background: #fff;
+}
+
+.pos-campo i {
+    font-size: 0.78rem;
+    color: #adb5bd;
+    flex: 0 0 auto;
+}
+
+.pos-campo:focus-within i { color: var(--rinas-naranja); }
+
+.pos-campo input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding: 0.55rem 0;
+    font-size: 0.88rem;
+    font-family: var(--font-principal);
+    color: #000;
+}
+
+.pos-campo input:focus { outline: none; }
+.pos-campo input::placeholder { color: #adb5bd; }
+
+/* --- Carrito: crece con el panel y scrollea por dentro --- */
+.pos-carrito {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    background: #FFFDF5;
+    border: 1px solid #e9e6d8;
+    padding: 0.35rem;
+}
+
+.pos-carrito-vacio {
+    color: #adb5bd;
+    font-size: 0.8rem;
+    text-align: center;
+    margin: 0;
+    padding: 1.9rem 0.5rem;
+    line-height: 1.6;
+}
+
+.pos-carrito-vacio i {
+    display: block;
+    font-size: 1.7rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+}
+
+.pos-lineas { display: flex; flex-direction: column; }
+
+.pos-linea {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    gap: 0.4rem;
+    align-items: center;
+    padding: 0.5rem 0.4rem;
+    background: #fff;
+    border: 1px solid #ecead9;
+    margin-bottom: 0.35rem;
+    animation: posEntra 0.18s ease;
+}
+
+.pos-linea:last-child { margin-bottom: 0; }
+
+@keyframes posEntra {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.pos-linea-info { min-width: 0; display: flex; flex-direction: column; }
+
+.pos-linea-nombre {
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--rinas-azul);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pos-linea-unit { font-size: 0.68rem; color: #868e96; }
+
+.pos-linea-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    background: #F4F1E4;
+    border: 1px solid #e9e6d8;
+    padding: 0.1rem;
+}
+
+.pos-cant-btn,
+.pos-quitar-btn {
+    width: 22px;
+    height: 22px;
+    border: 0;
+    background: #fff;
+    color: var(--rinas-azul);
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.12s, color 0.12s;
+}
+
+.pos-cant-btn:hover { background: var(--rinas-naranja); color: #000; }
+.pos-quitar-btn:hover { background: #c0392b; color: #fff; }
+
+.pos-cant-val {
+    min-width: 22px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #000;
+}
+
+.pos-linea-total {
+    font-size: 0.85rem;
+    font-weight: 800;
+    white-space: nowrap;
+    color: #000;
+}
+
+/* --- Total: minimalista, solo un filete y la cifra ---
+   Sin banda de color ni sombra: el peso lo dan el tamano y el color. */
+.pos-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.7rem 0.15rem 0.15rem;
+    border-top: 1px solid #000;
+}
+
+.pos-total-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #868e96;
+}
+
+.pos-total-valor {
+    font-size: 1.45rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--rinas-azul);
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- Error --- */
+.pos-error {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #b00020;
+    background: #FFF0F0;
+    border-left: 4px solid #c0392b;
+    padding: 0.5rem 0.7rem;
+}
+
+/* --- Cobrar: contenido, no gigante --- */
+.pos-cobrar {
+    width: 100%;
+    padding: 0.62rem 0.9rem;
+    border: 1px solid #000;
+    background: var(--rinas-naranja);
+    color: #000;
+    font-weight: 800;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    flex: 0 0 auto;
+    transition: background-color 0.15s, box-shadow 0.1s ease;
+}
+
+.pos-cobrar:hover:not(:disabled) {
+    background: var(--rinas-naranja-hover);
+    box-shadow: 0 2px 0 #000;
+}
+
+.pos-cobrar:active:not(:disabled) { box-shadow: none; }
+.pos-cobrar:disabled { opacity: 0.6; cursor: progress; }
+
+/* --- Pedidos en curso --- */
+.pos-abiertos { margin-top: 1.6rem; }
+
+.pos-abiertos-titulo {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--rinas-azul);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.7rem;
+}
+
+.pos-badge {
+    background: var(--rinas-azul);
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+}
+
+.pos-abiertos-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.7rem;
+}
+
+.pos-pedido {
+    background: #fff;
+    border: 1px solid #000;
+    border-left: 5px solid var(--rinas-azul);
+    padding: 0.6rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.pos-pedido--pendiente { border-left-color: #D97706; }
+.pos-pedido--cocina    { border-left-color: #2563eb; }
+.pos-pedido--listo     { border-left-color: #0a7a42; }
+
+.pos-pedido-cab {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+}
+
+.pos-pedido-folio { font-size: 0.9rem; color: var(--rinas-azul); }
+
+.pos-pedido-tipo {
+    background: #EEE9D6;
+    padding: 0.05rem 0.35rem;
+    font-weight: 800;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.pos-pedido-hora { margin-left: auto; color: #868e96; }
+
+.pos-pedido-cliente { font-size: 0.8rem; font-weight: 700; }
+
+.pos-pedido-detalle {
+    font-size: 0.74rem;
+    color: #6c757d;
+    line-height: 1.35;
+}
+
+.pos-pedido-pie {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    border-top: 1px dashed #d9d9d9;
+    padding-top: 0.4rem;
+    margin-top: 0.15rem;
+}
+
+.pos-pedido-total { font-weight: 800; font-size: 0.88rem; }
+
+.pos-estado {
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid #000;
+}
+
+.pos-estado--pendiente { background: #FFF4DC; color: #8a5a00; }
+.pos-estado--cocina    { background: #E8E8F5; color: var(--rinas-azul); }
+.pos-estado--listo     { background: #E6F4EA; color: #0a7a42; }
+
+.pos-pedido-acciones { margin-left: auto; }
+
+.pos-btn-estado {
+    border: 1px solid #000;
+    background: var(--rinas-azul);
+    color: #fff;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.26rem 0.5rem;
+    cursor: pointer;
+}
+
+.pos-btn-estado:hover { background: var(--rinas-naranja); color: #000; }
+.pos-btn-estado--ok:hover { background: #0a7a42; color: #fff; }
