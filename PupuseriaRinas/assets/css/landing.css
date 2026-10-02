@@ -1,0 +1,1359 @@
+/* ============================================================================
+   Landing Pupusería Rinas - rediseño editorial
+   ----------------------------------------------------------------------------
+   Lenguaje visual: bloques a sangre completa, sin esquinas redondeadas en las
+   imágenes, tipografía enorme en mayúsculas, mucho aire y una sola línea de
+   acento naranja. Las secciones alternan crema / blanco / azul marino para que
+   el scroll tenga ritmo sin necesidad de degradados.
+
+   Reglas de la paleta (uso deliberadamente restringido):
+     - azul marino  = ancla (hero, producto destacado, equipo, footer)
+     - crema / blanco = campos de respiro
+     - naranja      = acento (eyebrows, filetes, un CTA, hover). Nunca un fondo.
+
+   Todas las clases llevan prefijo `nl-` para no chocar con las reglas que
+   custom.css comparte con menu.php, ubicacion.php y nosotros.php.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- tokens - */
+:root {
+    /* hereda la paleta de custom.css y añade los grises editorial */
+    --nl-azul: var(--rinas-azul);
+    --nl-azul-suave: var(--rinas-azul-hover);
+    --nl-naranja: var(--rinas-naranja);
+    --nl-naranja-oscuro: var(--rinas-naranja-hover);
+    --nl-crema: var(--rinas-crema);
+    --nl-tinta: #111114;
+    --nl-tinta-60: rgba(17, 17, 20, 0.62);
+    --nl-tinta-40: rgba(17, 17, 20, 0.42);
+    --nl-hueso: rgba(255, 255, 255, 0.72);
+    --nl-hueso-40: rgba(255, 255, 255, 0.4);
+    --nl-linea: rgba(11, 11, 69, 0.14);
+    --nl-linea-clara: rgba(255, 255, 255, 0.16);
+
+    /* ritmo vertical: una sola variable para que todas las secciones respiren
+       igual en cualquier viewport */
+    --nl-ritmo: clamp(5rem, 11vw, 10.5rem);
+    --nl-ancho: 1400px;
+}
+
+/* ------------------------------------------------------------------ base - */
+.pagina-landing {
+    background-color: #fff;
+    color: var(--nl-tinta);
+    -webkit-font-smoothing: antialiased;
+}
+
+.pagina-landing h1,
+.pagina-landing h2,
+.pagina-landing h3 {
+    font-family: var(--font-titulos);
+    font-weight: 800;
+    color: inherit;
+    margin: 0;
+}
+
+/* Rejilla de contenido: el texto nunca se estira más de lo legible */
+.pagina-landing .container {
+    max-width: var(--nl-ancho);
+}
+
+/* ------------------------------------------------- eyebrow / tipografía - */
+.nl-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--font-principal);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--nl-tinta-60);
+    margin-bottom: 1.4rem;
+}
+
+.nl-eyebrow::before {
+    content: "";
+    width: 2.25rem;
+    height: 2px;
+    background-color: var(--nl-naranja);
+    flex: 0 0 auto;
+}
+
+.nl-eyebrow--claro {
+    color: var(--nl-hueso);
+}
+
+/* Titular gigante de sección. line-height < 1 para que las líneas se junten y
+   el bloque se lea como una sola pieza, como en las portadas editoriales. */
+.nl-display {
+    font-size: clamp(3rem, 8.2vw, 8rem);
+    line-height: 0.86;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+.nl-title {
+    font-size: clamp(2.1rem, 4.6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+}
+
+.nl-lead {
+    font-size: clamp(1.02rem, 1.35vw, 1.22rem);
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--nl-tinta-60);
+    max-width: 46ch;
+}
+
+/* --------------------------------------------------------------- botones - */
+.nl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 3.4rem;
+    padding: 0 2rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: none;
+    font-family: var(--font-titulos);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.25s ease, background-color 0.25s ease,
+        border-color 0.25s ease, color 0.25s ease;
+}
+
+.nl-btn:hover,
+.nl-btn:focus-visible {
+    transform: translateY(-2px);
+}
+
+.nl-btn:focus-visible,
+.nl-icon-btn:focus-visible,
+.nl-hero-scroll:focus-visible,
+.nl-role:focus-visible,
+.nl-link:focus-visible,
+.nl-sizes button:focus-visible,
+.nl-gallery-bars button:focus-visible,
+.nl-thumbs button:focus-visible {
+    outline: 3px solid var(--nl-naranja);
+    outline-offset: 3px;
+}
+
+.nl-btn svg {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+}
+
+/* Texto azul sobre naranja: el contraste más fuerte de la paleta sin gritar */
+.nl-btn--naranja {
+    background-color: var(--nl-naranja);
+    color: var(--nl-azul);
+}
+
+.nl-btn--naranja:hover,
+.nl-btn--naranja:focus-visible {
+    background-color: var(--nl-naranja-oscuro);
+    color: var(--nl-azul);
+}
+
+.nl-btn--azul {
+    background-color: var(--nl-azul);
+    color: #fff;
+}
+
+.nl-btn--azul:hover,
+.nl-btn--azul:focus-visible {
+    background-color: var(--nl-azul-suave);
+    color: #fff;
+}
+
+.nl-btn--linea {
+    border-color: var(--nl-);
+    color: orange;
+}
+
+.nl-btn--linea:hover,
+.nl-btn--linea:focus-visible {
+    border-color: var(--nl-azul);
+    color: var(--nl-azul);
+}
+
+/* Sobre el hero (oscuro): contorno claro en vez de relleno */
+.nl-btn--ghost {
+    border-color: rgba(255, 255, 255, 0.42);
+    color: #fff;
+}
+
+.nl-btn--ghost:hover,
+.nl-btn--ghost:focus-visible {
+    border-color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.nl-icon-btn {
+    width: 3.4rem;
+    height: 3.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--nl-linea);
+    border-radius: 999px;
+    background-color: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.nl-icon-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--nl-naranja);
+    color: var(--nl-naranja);
+}
+
+.nl-icon-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ------------------------------------------------------------------- hero - */
+.nl-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 8.5rem 0 5.5rem;
+    overflow: hidden;
+    color: #fff;
+}
+
+.nl-hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* --- Sobrevolente y parallax ------------------------------------------------
+   Las capas que se desplazan van sobredimensionadas un `--sobre` respecto a su
+   contenedor, para que al moverse nunca destapen un borde. La relación que hay
+   que respetar es:  sobre >= velocidad x (1 + 2 x sobre)
+   Los valores de abajo (sobre 14%, velocidad 8) cumplen con margen: el
+   desplazamiento máximo es 8% x 128% = 10.2%, dentro del 14% disponible.
+   Si se sube la velocidad hay que subir también el sobrevolente. */
+.nl-hero-video {
+    position: absolute;
+    top: -14%;
+    left: 0;
+    width: 100%;
+    height: 128%;
+    object-fit: cover;
+    will-change: transform;
+}
+
+/* Velo en degradado:-legible arriba (navbar) y abajo (texto), sin tapar el
+   centro de la imagen. */
+.nl-hero-veil {
+    position: absolute;
+    inset: 0;
+}
+
+.nl-hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.nl-hero-title {
+    /* 12vw en desktop, pero en movil el limite inferior manda: "Cafe caliente"
+       es la linea mas larga y a 12vw de 375px se pasaria del ancho utile. */
+    font-size: clamp(2.7rem, 11.5vw, 10.5rem);
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    margin-bottom: 1.75rem;
+}
+
+.nl-hero-title span {
+    display: block;
+}
+
+.nl-hero-title .nl-hero-accent {
+    color: var(--nl-naranja);
+}
+
+.nl-hero-lead {
+    font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--nl-hueso);
+    max-width: 40ch;
+    margin-bottom: 2.5rem;
+}
+
+.nl-hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+}
+
+.nl-hero-scroll {
+    position: absolute;
+    right: clamp(1.5rem, 4vw, 3.5rem);
+    bottom: 3rem;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+}
+
+.nl-hero-scroll-line {
+    display: block;
+    width: 1px;
+    height: 4.5rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.75));
+    animation: nl-baja 2.4s ease-in-out infinite;
+    transform-origin: top;
+}
+
+@keyframes nl-baja {
+
+    0%,
+    100% {
+        transform: scaleY(0.35);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+/* ------------------------------------------- 01 · enlaces / tres bloques - */
+.nl-links {
+    padding-top: 100px;
+    background-color: #FFF6D3;
+    align-items: center;
+}
+
+.nl-links-head {
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+/* Bloques a sangre completa: llegan al borde de la pantalla y se tocan entre
+   sí. Sin gutters, sin radios, sin sombras. */
+.nl-links-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.nl-link {
+    position: relative;
+    display: block;
+    flex: 1 1 22rem;
+    min-height: clamp(28rem, 58vh, 40rem);
+    overflow: hidden;
+    background-color: var(--nl-azul);
+    color: #fff;
+    text-decoration: none;
+    border-right: 1px solid var(--nl-linea);
+}
+
+/* El ultimo de la fila no necesita filete a la derecha */
+.nl-link:last-child {
+    border-right: 0;
+}
+
+/* La foto se sobredimensiona para que el desplazamiento parallax no destape
+   los bordes al moverse. */
+.nl-link-media {
+    position: absolute;
+    top: -14%;
+    left: 0;
+    width: 100%;
+    height: 128%;
+    z-index: 0;
+    display: block;
+    will-change: transform;
+}
+
+.nl-link-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform 1.1s cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+
+
+
+.nl-link-body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: inherit;
+    padding: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+.nl-link-num {
+    font-family: var(--font-titulos);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--nl-naranja);
+    margin-bottom: auto;
+}
+
+.nl-link-title {
+    font-family: var(--font-titulos);
+    font-size: clamp(1.9rem, 3.1vw, 3rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 0.65rem;
+}
+
+.nl-link-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--nl-hueso);
+    max-width: 28ch;
+}
+
+.nl-link-go {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.85rem;
+    height: 2.85rem;
+    margin-top: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    border-radius: 999px;
+    transition: transform 0.35s ease, background-color 0.35s ease,
+        border-color 0.35s ease, color 0.35s ease;
+}
+
+.nl-link-go svg {
+    width: 17px;
+    height: 17px;
+}
+
+.nl-link:hover .nl-link-media img,
+.nl-link:focus-visible .nl-link-media img {
+    transform: scale(1.09);
+}
+
+.nl-link:hover .nl-link-veil,
+.nl-link:focus-visible .nl-link-veil {
+    background: linear-gradient(180deg, rgba(11, 11, 69, 0.2) 0%, rgba(11, 11, 69, 0.62) 52%, rgba(11, 11, 69, 0.96) 100%);
+}
+
+.nl-link:hover .nl-link-go,
+.nl-link:focus-visible .nl-link-go {
+    background-color: var(--nl-naranja);
+    border-color: var(--nl-naranja);
+    color: var(--nl-azul);
+    transform: translateX(6px);
+}
+
+/* ------------------------------------------ 02 · galería a pantalla total - */
+/* Sin padding superior: el encabezado va superpuesto al banner. Elritmo de la
+   seccion lo aporta el hueco entre el banner y las miniaturas. */
+.nl-gallery {
+    background-color: var(--nl-crema);
+}
+
+/* El banner ocupa la pantalla entera y va a sangre: sin radio, sin sombra. */
+/* vh antes que svh: en moviles svh es la altura sin barras del navegador, que
+   deja el banner un poco mas bajo que la pantalla. */
+.nl-gallery-banner {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 26rem;
+    overflow: hidden;
+    background-color: var(--nl-azul);
+}
+
+/* El encabezado va sobre el banner, no en un bloque crema previo: asi titulo y
+   foto se leen como una sola pieza, como en las portadas. El padding superior
+   deja sitio a la cabecera fija. */
+.nl-gallery-intro {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+    padding: clamp(6.5rem, 11vh, 8.5rem) clamp(1.25rem, 4vw, 3.5rem) 0;
+    pointer-events: none;
+}
+
+.nl-gallery-intro .nl-eyebrow {
+    color: var(--nl-hueso);
+}
+
+.nl-gallery-intro .nl-title {
+    color: #fff;
+    text-shadow: 0 2px 26px rgba(11, 11, 69, 0.7);
+}
+
+.nl-splide {
+    height: 100%;
+}
+
+.nl-splide .splide__track,
+.nl-splide .splide__list {
+    height: 100%;
+}
+
+/* Splide fija el alto del track por JS en el modo fade; el !important deja la
+   altura decidir al viewport y no a la proporción de la foto. */
+.nl-splide .splide__track {
+    height: 100% !important;
+}
+
+/* Splide aplica `transform: translateX(-N*100%)` a cada slide (lo usa para el
+   arrastre y para montar el bucle), pero aqui las fotos estan apiladas con
+   position:absolute + inset:0. Ese desplazamiento las saca de la pantalla: la
+   primera, con translateX(0), si se ve, y las otras cinco quedan fuera. Por eso
+   el banner mostraba una sola imagen. Se anula el transform y el fundido lo
+   resuelve la opacidad, que es lo propio de un fade. */
+.nl-splide .splide__slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    transform: none !important;
+    overflow: hidden;
+}
+
+.nl-slide-media {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    display: block;
+    will-change: transform;
+}
+
+.nl-slide-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Ken Burns lentísimo sobre la foto activa: da vida al banner sin robar
+   atención al texto. El acercamiento se queda en 1.05 a propósito: cada
+   punto de zoom es un punto más de ampliación sobre la foto original, y las
+   fotos del proyecto miden 1600x1067, así que 1.08 las emborronaba. */
+.nl-splide .splide__slide.is-active .nl-slide-media img {
+    animation: nl-kenburns 4.2s ease-out forwards;
+}
+
+@keyframes nl-kenburns {
+    from {
+        transform: scale(1.01);
+    }
+
+    to {
+        transform: scale(1.05);
+    }
+}
+
+/* Los recortes de producto con transparencia (pupusas, licuado) no son fotos:
+   forzarles a llenar el alto los ampliaba casi x2 y se veian fatal. Aqui se
+   muestran a su tamano natural, sin ampliar nunca, sobre el azul del banner.
+   `width/height: auto` es lo que garantiza que no se escalen: con contain y
+   100% de ancho el navegador los estiraba hasta la caja. */
+.nl-splide .splide__slide[data-fit="contain"] .nl-slide-media img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.nl-slide-cap {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+    max-width: 22ch;
+    padding: 0.5rem 1.1rem 0.5rem 0;
+    font-family: var(--font-titulos);
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: #fff;
+    text-shadow: 0 2px 18px rgba(11, 11, 69, 0.55);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.nl-splide .splide__slide.is-active .nl-slide-cap {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Barra de control:红线 de progreso + contador, al pie del banner */
+.nl-gallery-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 3.5rem);
+    background: linear-gradient(180deg, rgba(11, 11, 69, 0) 0%, rgba(11, 11, 69, 0.72) 100%);
+}
+
+.nl-gallery-bars {
+    display: flex;
+    gap: 0.5rem;
+    flex: 1 1 auto;
+    max-width: 34rem;
+}
+
+.nl-gallery-bars button {
+    flex: 1 1 0;
+    height: 3px;
+    padding: 0;
+    border: 0;
+    background-color: rgba(255, 255, 255, 0.32);
+    cursor: pointer;
+    overflow: hidden;
+    /* el área de click se agranda sin agrandar la línea */
+    position: relative;
+}
+
+.nl-gallery-bars button::after {
+    content: "";
+    position: absolute;
+    inset: -14px 0;
+}
+
+.nl-gallery-bars button span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background-color: var(--nl-naranja);
+}
+
+.nl-gallery-bars button.is-active span {
+    width: 0;
+}
+
+.nl-gallery-count {
+    font-family: var(--font-titulos);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: #fff;
+    flex: 0 0 auto;
+}
+
+.nl-gallery-count b {
+    color: var(--nl-naranja);
+    font-weight: 800;
+}
+
+/* Miniaturas: banda a sangre bajo el banner. Las seis reparten el ancho
+   completo del bloque crema, sin contenedor que las encoja. El ancho de cada
+   una lo calcula landing.js midiendo el bloque, porque un fixedWidth fijo en
+   px deja el bloque a medias; por eso el contenedor ya no se centra: la banda
+   tiene que tocar los dos bordes como el banner. */
+.nl-gallery-thumbs-wrap {
+    width: 100%;
+    overflow: hidden;
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(4rem, 8vw, 7rem);
+}
+
+.nl-thumbs {
+    width: 100%;
+    --nl-thumb-gap: 10px;
+}
+
+/* Splide aplica margin-right tambien a la ultima miniatura, y ese hueco final
+   haria que la banda midiera 10px mas de lo que debe. */
+.nl-thumbs .splide__slide:last-child {
+    margin-right: 0 !important;
+}
+
+/* El track recorta: la banda tiene que medir justo el ancho del bloque, asi
+   que cualquier desplazamiento de la pista se veria como recorte. */
+.nl-thumbs .splide__track {
+    overflow: hidden;
+}
+
+.nl-thumbs .splide__slide {
+    border: 1px solid var(--nl-linea);
+    opacity: 0.45;
+    cursor: pointer;
+    transition: opacity 0.3s ease, border-color 0.3s ease;
+}
+
+.nl-thumbs .splide__slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nl-thumbs .splide__slide:hover {
+    opacity: 0.8;
+}
+
+.nl-thumbs .splide__slide.is-active {
+    opacity: 1;
+    border-color: var(--nl-naranja);
+    box-shadow: inset 0 -3px 0 var(--nl-naranja);
+}
+
+/* ------------------------------------------------ 03 · producto destacado - */
+.nl-feature {
+    padding: var(--nl-ritmo) 0;
+    background-color: var(--nl-azul);
+    color: #fff;
+    overflow: hidden;
+}
+
+.nl-feature .nl-lead {
+    color: var(--nl-hueso);
+}
+
+.nl-feature-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(2rem, 5vw, 4rem) 0;
+}
+
+/* Anillo naranja: el único elemento gráfico de la sección. */
+.nl-feature-ring {
+    position: absolute;
+    width: min(78%, 30rem);
+    aspect-ratio: 1;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: 50%;
+}
+
+.nl-feature-ring::after {
+    content: "";
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.16) 0%, rgba(245, 158, 11, 0) 70%);
+}
+
+/* El PNG es transparente, así que flota sobre el azul sin caja blanca. */
+.nl-feature-img {
+    position: relative;
+    z-index: 1;
+    width: min(88%, 34rem);
+    height: auto;
+    filter: drop-shadow(0 34px 46px rgba(0, 0, 0, 0.45));
+    will-change: transform;
+}
+
+.nl-feature-buy {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    padding: 2rem 0;
+    margin: 2rem 0;
+    border-top: 1px solid var(--nl-linea-clara);
+    border-bottom: 1px solid var(--nl-linea-clara);
+}
+
+.nl-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--nl-hueso-40);
+    margin-bottom: 0.6rem;
+}
+
+.nl-price {
+    font-family: var(--font-titulos);
+    font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    font-weight: 800;
+    line-height: 1;
+}
+
+.nl-sizes {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.nl-sizes button {
+    min-width: 3.1rem;
+    height: 3.1rem;
+    padding: 0 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-titulos);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: transparent;
+    border: 1px solid var(--nl-linea-clara);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+        color 0.2s ease, transform 0.2s ease;
+}
+
+.nl-sizes button:hover {
+    border-color: #fff;
+    transform: translateY(-2px);
+}
+
+.nl-sizes button.is-active {
+    background-color: var(--nl-naranja);
+    border-color: var(--nl-naranja);
+    color: var(--nl-azul);
+}
+
+.nl-feature-cta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.nl-feature-cta .nl-icon-btn {
+    border-color: var(--nl-linea-clara);
+}
+
+.nl-feature-meta {
+    display: flex;
+    gap: 1.75rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--nl-hueso-40);
+}
+
+.nl-feature-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.nl-feature-meta svg {
+    width: 15px;
+    height: 15px;
+    color: var(--nl-naranja);
+}
+
+/* ------------------------------------------------------- 04 · licuados --- */
+.nl-smoothies {
+    padding: var(--nl-ritmo) 0;
+    background-color: var(--nl-crema);
+}
+
+/* Dos columnas que solo se separan a partir de lg: por debajo el copy se
+   apila sobre la imagen, que es lo que espera el ojo en vertical. */
+.nl-smoothies-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+}
+
+@media (min-width: 992px) {
+    .nl-smoothies-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.nl-smoothies-copy .nl-display {
+    margin-bottom: 1.25rem;
+}
+
+/* Etiquetas: los "chips"oden diseño, ahora texto plano con filete. */
+.nl-tags {
+    display: flex;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+}
+
+.nl-tags li {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--nl-tinta-60);
+    padding-top: 0.7rem;
+    border-top: 2px solid var(--nl-naranja);
+}
+
+.nl-smoothies-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: clamp(20rem, 46vw, 34rem);
+    overflow: hidden;
+}
+
+
+.nl-licuado-carousel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.nl-licuado-carousel .carousel-inner,
+.nl-licuado-carousel .carousel-item {
+    width: 100%;
+    height: 100%;
+}
+
+.nl-licuado-carousel .carousel-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.nl-licuado-carousel .licuado-img {
+    width: 1000px;
+    height: auto;
+    object-fit: contain;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.nl-licuado-carousel .carousel-item:not(.active) .licuado-img {
+    opacity: 0;
+}
+
+.nl-licuado-carousel .carousel-item.active .licuado-img {
+    transform: scale(1.02);
+}
+
+.nl-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    margin-top: -1.5rem;
+    padding: 0;
+    color: var(--nl-azul);
+    border: 1px solid var(--nl-linea);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease,
+        border-color 0.25s ease, transform 0.25s ease;
+}
+
+.nl-carousel-arrow:hover {
+    background-color: var(--nl-azul);
+    border-color: var(--nl-azul);
+    color: #fff;
+    transform: scale(1.06);
+}
+
+.nl-carousel-arrow svg {
+    width: 17px;
+    height: 17px;
+}
+
+.nl-carousel-arrow--prev {
+    left: 0;
+}
+
+.nl-carousel-arrow--next {
+    right: 0;
+}
+
+/* Puntos = rayitas, no círculos */
+.nl-licuado-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.5rem;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nl-licuado-dots button {
+    width: 2rem;
+    height: 3px;
+    padding: 0;
+    opacity: 1;
+    background-color: rgba(11, 11, 69, 0.22);
+    border: 0;
+    transition: background-color 0.3s ease, width 0.3s ease;
+}
+
+.nl-licuado-dots button.active {
+    width: 3.5rem;
+    background-color: var(--nl-naranja);
+}
+
+/* ------------------------------------------------------ 05 · equipo ------ */
+.nl-join {
+    padding: var(--nl-ritmo) 0;
+    background-color: var(--nl-azul);
+    color: #fff;
+}
+
+.nl-join-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: start;
+}
+
+@media (min-width: 992px) {
+    .nl-join-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.nl-join .nl-lead {
+    color: var(--nl-hueso);
+}
+
+.nl-tags--ghost {
+    margin-bottom: 0;
+}
+
+.nl-tags--ghost li {
+    color: var(--nl-hueso);
+    border-top-color: rgba(245, 158, 11, 0.6);
+}
+
+/* Lista tipo índice: hairline arriba de cada fila, sin cajas */
+.nl-role {
+    display: grid;
+    grid-template-columns: 3rem 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.9rem 0;
+    border-top: 1px solid var(--nl-linea-clara);
+    color: #fff;
+    text-decoration: none;
+    transition: padding-left 0.35s ease, border-color 0.35s ease;
+}
+
+.nl-role:last-child {
+    border-bottom: 1px solid var(--nl-linea-clara);
+}
+
+.nl-role-num {
+    font-family: var(--font-titulos);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--nl-naranja);
+}
+
+.nl-role-name {
+    display: block;
+    font-family: var(--font-titulos);
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+}
+
+.nl-role-desc {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--nl-hueso-40);
+    max-width: 34ch;
+    margin-top: 0.35rem;
+}
+
+.nl-role-go {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid var(--nl-linea-clara);
+    border-radius: 999px;
+    transition: transform 0.3s ease, background-color 0.3s ease,
+        border-color 0.3s ease, color 0.3s ease;
+}
+
+.nl-role-go svg {
+    width: 16px;
+    height: 16px;
+}
+
+.nl-role:hover,
+.nl-role:focus-visible {
+    padding-left: 0.85rem;
+    border-top-color: var(--nl-naranja);
+}
+
+.nl-role:hover .nl-role-go,
+.nl-role:focus-visible .nl-role-go {
+    background-color: var(--nl-naranja);
+    border-color: var(--nl-naranja);
+    color: var(--nl-azul);
+}
+
+/* ------------------------------------------------ 06 · cinta de palabras - */
+.nl-marquee {
+    overflow: hidden;
+    padding: 1.5rem 0;
+    background-color: var(--nl-crema);
+    border-top: 1px solid var(--nl-linea);
+    border-bottom: 1px solid var(--nl-linea);
+}
+
+.nl-marquee-track {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    width: max-content;
+    animation: nl-marquee 34s linear infinite;
+}
+
+.nl-marquee-track span {
+    font-family: var(--font-titulos);
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--nl-azul);
+    white-space: nowrap;
+}
+
+.nl-marquee-track span:nth-child(even) {
+    color: var(--nl-naranja);
+    font-size: 0.9rem;
+}
+
+@keyframes nl-marquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* ------------------------------------------------------------- pie ------ */
+.pagina-landing .footer-rinas {
+    border-top: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.pagina-landing .footer-rinas .footer-divider {
+    border-top-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+/* --------------------------------------------------- cabecera (landing) - */
+/* La cabecera es compartida con el resto del sitio, así que todo lo de aquí va
+   acotado a .pagina-landing y las otras páginas no cambian. */
+.pagina-landing .navbar-rinas .nav-link {
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.pagina-landing .navbar-rinas .nav-link:hover {
+    text-decoration: none;
+}
+
+/* El logo es un JPG de fondo crema: sobre el hero oscuro funciona como un
+   círculo de la paleta en lugar de un cuadrado con borde. */
+.pagina-landing .logo-rinas {
+    border-radius: 50% !important;
+}
+
+.pagina-landing .header-rinas.scrolled .navbar-rinas {
+    background-color: var(--nl-azul);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 18px rgba(11, 11, 69, 0.28);
+}
+
+/* Fuera las franjas diagonales: belongenece al diseño anterior y choca con el
+   lenguaje plano del nuevo bloque. */
+.pagina-landing .header-rinas.scrolled .navbar-rinas::before,
+.pagina-landing .header-rinas.scrolled .navbar-rinas::after {
+    display: none;
+}
+
+.pagina-landing .header-rinas.scrolled .navbar-rinas .nav-link:hover {
+    color: orange;
+}
+
+.pagina-landing .header-rinas.scrolled .navbar-rinas .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.pagina-landing .header-rinas.scrolled .navbar-rinas .navbar-toggler-icon {
+    filter: none;
+}
+
+/* ------------------------------------------------------- animaciones ---- */
+/* El marcado se anima solo cuando JS está presente (la clase .js la pone el
+   script en el <head>), así que sin JavaScript el contenido se ve siempre. */
+.js [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+    transition: opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+        transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition-delay: var(--nl-reveal, 0ms);
+}
+
+.js [data-reveal].is-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+/* El parallax escribe transform en el mismo elemento que reveal, así que
+   durante la entrada se dejan transformationalos dos animaciones. */
+[data-reveal][data-parallax] {
+    transition: opacity 0.75s ease, transform 0.75s ease;
+}
+
+/* --------------------------------------------------------- responsive --- */
+@media (max-width: 991.98px) {
+    /* Apilados: un bloque por fila, sin filete lateral */
+    .nl-link {
+        flex: 1 1 100%;
+        min-height: min(72vh, 34rem);
+        border-right: 0;
+        border-bottom: 1px solid var(--nl-linea);
+    }
+
+    .nl-link:last-child {
+        border-bottom: 0;
+    }
+
+    .nl-feature-visual {
+        order: -1;
+    }
+
+    .nl-role {
+        grid-template-columns: 2.5rem 1fr auto;
+    }
+}
+
+@media (max-width: 575.98px) {
+    /* En movil la tira no cabe (458px de miniaturas en menos de 500 de ancho):
+       se alinea con el resto del texto y se desliza, en vez de quedar
+       colgando descentrada. */
+    .nl-gallery-thumbs-wrap {
+        justify-content: flex-start;
+    }
+
+    .nl-thumbs {
+        width: 100%;
+    }
+
+    .nl-hero {
+        padding: 7rem 0 4rem;
+    }
+
+    .nl-gallery-bars {
+        max-width: none;
+    }
+
+    .nl-feature-buy {
+        gap: 1.75rem;
+    }
+
+    .nl-carousel-arrow--prev {
+        left: 0.25rem;
+    }
+
+    .nl-carousel-arrow--next {
+        right: 0.25rem;
+    }
+}
+
+/* ------------------------------------------------- movimiento reducido --- */
+/* Con esta preferencia el sitio se ve estático y completo: se anula el
+   desplazamiento del parallax (además landing.js lo desactiva), el Ken Burns,
+   la cinta de palabras y las transiciones de entrada. */
+@media (prefers-reduced-motion: reduce) {
+
+    .nl-hero-video,
+    .nl-link-media,
+    .nl-slide-media,
+    .nl-feature-img {
+        transform: none !important;
+        animation: none !important;
+    }
+
+    .nl-splide .splide__slide.is-active .nl-slide-media img {
+        animation: none;
+    }
+
+    .nl-hero-scroll-line {
+        animation: none;
+        transform: scaleY(1);
+        opacity: 0.7;
+    }
+
+    .nl-marquee-track {
+        animation: none;
+    }
+
+    .js [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .nl-link-media img,
+    .nl-btn,
+    .nl-role,
+    .nl-role-go {
+        transition: none !important;
+    }
+}

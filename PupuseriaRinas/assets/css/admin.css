@@ -354,6 +354,9 @@
 }
 
 /* Panel */
+/* Borde de 1px como en el resto del admin (botones, filtros, KPIs). Estaba en
+   0.35px: una línea por debajo del píxel que el navegador dibuja gris y borrosa
+   y que chocaba con las líneas de 1px del contenido. */
 .admin-panel {
     background-color: #fff;
     border: 1px solid #000;
@@ -486,6 +489,139 @@
 }
 
 .emoji-xl { font-size: 3rem; }
+
+/* ============================================================================
+   Tarjeta compacta de productos (admin/productos.php)
+   ----------------------------------------------------------------------------
+   Tres decisiones para que la card sea mas pequeña:
+     1. la foto baja de 160px a 118px,
+     2. el precio vive DENTRO de la foto, en la esquina opuesta a los badges,
+        y asi el cuerpo no gasta una fila solo en el precio,
+     3. las tres acciones (editar / activar / eliminar) van en una sola linea
+        de botones cuadrados, en vez de dos botones anchos y uno debajo.
+   ========================================================================== */
+.producto-card__foto {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 118px;
+    overflow: hidden;
+    border-bottom: 1px solid #000;
+}
+
+/* El precio se ancla a la foto, nunca al cuerpo de la card */
+.producto-card__precio {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    z-index: 2;
+    padding: 0.1rem 0.5rem;
+    font-family: var(--font-titulos);
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.35;
+    color: #111;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 50px;
+}
+
+.producto-card__cuerpo {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: 0.55rem 0.65rem 0.65rem;
+}
+
+.producto-card__estado {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #6c757d;
+    margin-bottom: 0.15rem;
+}
+
+.producto-card__nombre {
+    font-size: 0.85rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 0.15rem;
+}
+
+.producto-card__desc {
+    font-size: 0.74rem;
+    line-height: 1.35;
+    color: #6c757d;
+    margin: 0 0 0.5rem;
+}
+
+/* Las tres acciones en una sola linea, ocupando todo el ancho */
+.producto-card__acciones {
+    display: flex;
+    gap: 0.3rem;
+    margin-top: auto;
+}
+
+.producto-card__icono {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 0.76rem;
+    line-height: 1;
+    color: #111;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.producto-card__icono:hover,
+.producto-card__icono:focus-visible {
+    background-color: #000;
+    color: #fff;
+}
+
+.producto-card__icono--activo {
+    background-color: #000;
+    color: #fff;
+}
+
+.producto-card__icono--activo:hover,
+.producto-card__icono--activo:focus-visible {
+    background-color: var(--rinas-naranja);
+    border-color: var(--rinas-naranja);
+    color: #fff;
+}
+
+.producto-card__icono--agotado {
+    background-color: var(--rinas-naranja);
+    border-color: var(--rinas-naranja);
+    color: #fff;
+}
+
+.producto-card__icono--agotado:hover,
+.producto-card__icono--agotado:focus-visible {
+    background-color: var(--rinas-naranja-hover);
+    border-color: var(--rinas-naranja-hover);
+    color: #fff;
+}
+
+.producto-card__icono--peligro {
+    color: #c0392b;
+}
+
+.producto-card__icono--peligro:hover,
+.producto-card__icono--peligro:focus-visible {
+    background-color: #c0392b;
+    border-color: #c0392b;
+    color: #fff;
+}
 
 .admin-user-badge--sm { width: 32px; height: 32px; font-size: 0.8rem; }
 .admin-user-badge--azul { background-color: #E8E8F5; color: var(--rinas-azul); }
@@ -858,11 +994,17 @@ html.admin-menu-cerrado .admin-main {
 }
 
 /* Buscador de listados */
+/* flex-nowrap + min-width:0: antes el input no podía encogerse por debajo de su
+   ancho intrínseco y el botón "Buscar" se caía a una segunda línea. */
+.admin-buscador { flex-wrap: nowrap; }
+
 .admin-buscador .form-control {
     border: 1px solid #000;
     border-radius: 0;
     font-size: 0.85rem;
     padding: 0.5rem 0.75rem;
+    flex: 1 1 auto;
+    min-width: 0;
     max-width: 320px;
 }
 
@@ -912,9 +1054,723 @@ html.admin-menu-cerrado .admin-main {
     color: #fff;
 }
 
+/* Los bordes de la píldora deshabilitada iban en rgba(0,0,0,.25): al solaparse
+   con el de "1" (que sí es #000) el lateral izquierdo quedaba de otro grosor
+   y color que el resto. Mismo trazo en todas; lo que se atenúa es el texto. */
 .admin-paginacion .page-item.disabled .page-link {
     background-color: #fff;
-    border-color: rgba(0, 0, 0, 0.25);
+    border-color: #000;
     color: #adb5bd;
 }
 
+
+/* ==========================================================================
+   Listado de pedidos (admin/pedidos.php)
+   ========================================================================== */
+
+/* --- Barra de filtros ---------------------------------------------------- */
+.pedidos-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem 0.9rem;
+    margin-bottom: 0.7rem;
+}
+
+.pedidos-toolbar--bajo { margin-bottom: 1rem; }
+
+.pedidos-grupo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.pedidos-etiqueta {
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9aa0a6;
+    margin-right: 0.1rem;
+}
+
+.pedidos-nuevo { margin-inline-start: auto; }
+
+/* El buscador queda a la derecha de los filtros de estado y ya no arrastra el
+   contador de resultados: ese texto vive abajo, en el pie del panel. */
+.admin-buscador--encaje {
+    margin-inline-start: auto;
+    margin-bottom: 0;
+}
+
+/* --- Panel y tabla ------------------------------------------------------- */
+.pedidos-panel { padding: 0; }
+
+/* La página de pedidos no hace scroll: el panel se estira hasta el alto
+   libre y la tabla se recorta en vez de empujar la página. La cantidad de
+   filas por página la fija admin/pedidos.php para que quepan sin recorte. */
+body.admin-pedidos-body {
+    overflow: hidden;
+}
+
+body.admin-pedidos-body .admin-main {
+    height: 100vh;
+    min-height: 0;
+}
+
+body.admin-pedidos-body .admin-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+body.admin-pedidos-body .pedidos-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+body.admin-pedidos-body .pedidos-panel .table-responsive {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.pedidos-tabla {
+    min-width: 760px;
+    font-size: 0.85rem;
+    margin-bottom: 0;
+}
+
+.pedidos-tabla thead th {
+    background-color: var(--rinas-azul);
+    color: var(--rinas-crema);
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 0;
+    padding: 0.72rem 0.8rem;
+    white-space: nowrap;
+}
+
+/* Dos clases para ganarle especificidad a las reglas de td de Bootstrap */
+.table.pedidos-tabla tbody td {
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.table.pedidos-tabla tbody tr:last-child td { border-bottom: 0; }
+
+.pedidos-tabla tbody tr:hover { background-color: #FFFBEA; }
+.pedidos-tabla tbody tr:hover .pedidos-folio { background-color: #FCE7A5; }
+
+.pedidos-folio {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    background-color: var(--rinas-crema);
+    border: 1px solid #000;
+    padding: 0.22rem 0.48rem;
+    transition: background-color 0.15s ease;
+}
+
+.pedidos-cliente {
+    font-weight: 700;
+    font-size: 0.86rem;
+    color: #111;
+    line-height: 1.25;
+}
+
+.pedidos-datos {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.1rem 0.7rem;
+    margin-top: 0.2rem;
+    overflow: hidden;
+}
+
+.pedidos-datos span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    color: #6c757d;
+    min-width: 0;
+}
+
+.pedidos-datos i { font-size: 0.62rem; opacity: 0.65; }
+
+/* El teléfono no se encoge (siempre cabe); la nota se trunca con puntos.
+   Así la celda mide lo mismo en todas las filas y no se alarga la tabla. */
+.pedidos-tel { flex: 0 0 auto; white-space: nowrap; }
+.pedidos-nota { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.pedidos-tipo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background-color: #fff;
+    border: 1px solid #000;
+    color: #111;
+    padding: 0.26rem 0.5rem;
+}
+
+.pedidos-tipo i { font-size: 0.66rem; }
+
+/* El detalle ya no se imprime en la celda: es un botón que abre el modal */
+.pedidos-ojo,
+.pedidos-borrar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #000;
+    border-radius: 0;
+    background-color: #fff;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.pedidos-ojo { color: var(--rinas-azul); font-size: 0.9rem; }
+.pedidos-ojo:hover, .pedidos-ojo:focus-visible { background-color: var(--rinas-azul); color: var(--rinas-crema); }
+
+.pedidos-borrar { color: #c0392b; font-size: 0.85rem; }
+.pedidos-borrar:hover, .pedidos-borrar:focus-visible { background-color: #c0392b; color: #fff; }
+
+.pedidos-total {
+    font-weight: 800;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+/* El select de estado es el propio estado: color de fondo + texto */
+.pedidos-estado {
+    border: 1px solid #000;
+    border-radius: 0;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    width: auto;
+    min-width: 118px;
+    padding: 0.38rem 1.9rem 0.38rem 0.6rem;
+    cursor: pointer;
+}
+
+.pedidos-estado--pendiente { background-color: #FFF4DC; color: #8a5a00; }
+.pedidos-estado--cocina { background-color: #E8E8F5; color: var(--rinas-azul); }
+.pedidos-estado--listo { background-color: #E6F4EA; color: #0a7a42; }
+.pedidos-estado--entregado {
+    background-color: var(--rinas-azul);
+    color: #fff;
+    --bs-form-select-background-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.pedidos-hora {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    color: #6c757d;
+    white-space: nowrap;
+}
+
+.pedidos-hora i { font-size: 0.66rem; opacity: 0.65; }
+
+/* --- Pie: contador de resultados + paginación ---------------------------- */
+.admin-paginacion-pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    border-top: 1px solid #000;
+    background-color: var(--rinas-crema);
+    padding: 0.55rem 0.85rem;
+}
+
+.admin-paginacion-resumen {
+    margin: 0;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(11, 11, 69, 0.7);
+}
+
+.admin-paginacion-resumen strong { color: var(--rinas-azul); font-weight: 800; }
+
+.admin-paginacion-pie .admin-paginacion { margin-top: 0; justify-content: flex-end; }
+.admin-paginacion-pie .page-link { background-color: transparent; border-color: #000; }
+.admin-paginacion-pie .page-item.active .page-link { background-color: #000; border-color: #000; color: #fff; }
+.admin-paginacion-pie .page-item.disabled .page-link { background-color: transparent; border-color: #000; color: rgba(0, 0, 0, 0.3); }
+
+/* --- Modal de detalle ---------------------------------------------------- */
+.pedidos-modal { border: 1px solid #000; border-radius: 0; }
+
+.pedidos-modal__cabecera {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background-color: var(--rinas-crema);
+    border-bottom: 1px solid #000;
+}
+
+.pedidos-modal__titulos { flex: 1 1 auto; min-width: 0; }
+
+.pedidos-modal__cejo {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(11, 11, 69, 0.6);
+}
+
+.pedidos-modal .modal-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--rinas-azul);
+    font-variant-numeric: tabular-nums;
+}
+
+.pedidos-ficha {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem 1rem;
+    margin: 0 0 1rem;
+    padding: 0.8rem 0.9rem;
+    background-color: #fff;
+    border: 1px solid #000;
+}
+
+.pedidos-ficha div { min-width: 0; }
+
+.pedidos-ficha dt {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 0.15rem;
+}
+
+.pedidos-ficha dd {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #111;
+    overflow-wrap: anywhere;
+}
+
+/* Sin `display`: la regla rompería el atributo hidden que usa el JS */
+.pedidos-modal__nota {
+    margin: 0 0 1rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #5a4a12;
+    background-color: #FFF4DC;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.pedidos-modal__nota i { color: #b0740a; margin-right: 0.4rem; }
+
+.pedidos-lineas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.pedidos-lineas thead th {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6c757d;
+    border-bottom: 1px solid #000;
+    padding: 0.3rem 0;
+}
+
+.pedidos-lineas tbody td {
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.16);
+}
+
+.pedidos-lineas__cant {
+    width: 54px;
+    font-weight: 800;
+    color: var(--rinas-azul);
+    white-space: nowrap;
+}
+
+.pedidos-lineas__vacia {
+    padding: 0.9rem 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.pedidos-lineas tfoot td {
+    padding: 0.55rem 0.5rem;
+    border-top: 1px solid #000;
+    background-color: var(--rinas-crema);
+    font-weight: 800;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.pedidos-lineas tfoot td:first-child { padding-left: 0.5rem; }
+.pedidos-lineas tfoot td:last-child { padding-right: 0.5rem; color: var(--rinas-azul); }
+
+
+/* ==========================================================================
+   Dashboard "sin scroll" (solo admin/index.php)
+   El body lleva .admin-dash-body: la rejilla reparte el alto disponible
+   entre KPIs, panel de pestañas y tira inferior. Nada de scroll de página;
+   solo las listas internas (tabla de pedidos) pueden desplazarse.
+   ========================================================================== */
+
+body.admin-dash-body {
+    overflow: hidden;
+}
+
+body.admin-dash-body .admin-main {
+    height: 100vh;
+    min-height: 0;
+}
+
+body.admin-dash-body .admin-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    padding: 1.1rem 1.25rem;
+}
+
+.admin-dash {
+    display: grid;
+    /* Sin la tira inferior (Pedidos recientes / Estado de hoy), el panel de
+       pestañas se queda con todo el alto libre. */
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 0.9rem;
+    height: 100%;
+    min-height: 0;
+}
+
+/* ---------- Tira de estado ---------- */
+.dash-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.dash-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff;
+    border: 1px solid #000;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.76rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.dash-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0a7a42;
+    box-shadow: 0 0 0 4px rgba(10, 122, 66, 0.2);
+}
+
+/* ---------- KPIs compactos ---------- */
+.dash-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+.dash-kpi {
+    background: #fff;
+    border: 1px solid #000;
+    padding: 0.8rem 0.95rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 0.6rem;
+    row-gap: 0.5rem;
+    min-width: 0;
+}
+
+.dash-kpi--accent {
+    border-left: 4px solid var(--rinas-naranja);
+    box-shadow: 0 8px 18px rgba(11, 11, 69, 0.07);
+}
+
+.dash-kpi-main {
+    min-width: 0;
+}
+
+.dash-kpi-foot {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.dash-kpi-spark {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 34px;
+}
+
+/* La tarjeta es baja: los textos no pueden partirse en dos lineas */
+.dash-kpi .admin-kpi-trend,
+.dash-kpi .small { white-space: nowrap; }
+
+.dash-kpi .admin-kpi-value { font-size: 1.5rem; }
+.dash-kpi .admin-kpi-icon { width: 34px; height: 34px; }
+
+/* ---------- Contenedor grande con pestañas ---------- */
+.dash-tabs-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0.9rem 1.1rem 1.1rem;
+}
+
+.dash-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(11, 11, 69, 0.12);
+    padding-bottom: 0.65rem;
+}
+
+.dash-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid #000;
+    background: #fff;
+    color: #111;
+    border-radius: 50px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dash-tab:hover { background: var(--rinas-crema); }
+
+.dash-tab[aria-selected="true"] {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+}
+
+.dash-tab i {
+    font-size: 0.8rem;
+}
+
+.dash-tabpanels {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-top: 0.75rem;
+}
+
+/* Cada panel es absoluto: así ApexCharts mide alto real al montarse.
+   Es columna flexible para que la fila de título (encabezado + Semana/Mes) quede
+   FUERA del área del gráfico: si la gráfica lo tapara, su barra de herramientas
+   aparecería encima del botón "Mes". */
+.dash-tabpanel {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+}
+
+.dash-tabpanel.is-active {
+    display: flex;
+    overflow: hidden;
+}
+
+.dash-chart {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    /* !important a propósito: ApexCharts escribe un `min-height` inline en el
+       contenedor igual a la altura de la gráfica. Sin anularlo, ese min-height
+       impide que el contenedor encoja y la gráfica se sale del panel. */
+    min-height: 0 !important;
+}
+
+/* Panel con lista lateral (top productos, estados) */
+.dash-split {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+    /* Una sola fila que ocupa todo el alto: sin esto la fila `auto` colapsaría
+       a la altura del contenido y la gráfica no mid bien. */
+    grid-template-rows: minmax(0, 1fr);
+    gap: 1.1rem;
+}
+
+/* Aquí la gráfica NO puede ir en absoluto: un hijo absoluto de una rejilla se
+   posiciona sobre la caja de padding del contenedor (ancho completo) en vez
+   de sobre su celda, y se desbordaría encima de la lista. Como celda normal
+   sí respeta la columna. */
+.dash-split > .dash-chart {
+    position: relative;
+    inset: auto;
+    height: 100%;
+    /* Véase la nota de .dash-chart: ApexCharts también escribe min-height inline
+       en estas celdas, y hay que anularlo o el gráfico desborda. */
+    min-height: 0 !important;
+    min-width: 0;
+}
+
+.dash-split--wide {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+}
+
+.dash-side {
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding-right: 0.25rem;
+}
+
+.dash-side-title {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin: 0;
+}
+
+.dash-rank {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+}
+
+.dash-rank-name {
+    flex: 0 0 40%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+}
+
+.dash-rank-value {
+    flex: 0 0 auto;
+    min-width: 52px;
+    text-align: right;
+    font-weight: 800;
+    color: #111;
+}
+
+.dash-legend {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.84rem;
+    padding: 0.4rem 0.55rem;
+    border: 1px solid rgba(11, 11, 69, 0.12);
+    background: #fff;
+}
+
+.dash-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex: 0 0 auto;
+}
+
+.dash-legend-value {
+    margin-left: auto;
+    font-weight: 800;
+}
+
+
+
+/* ---------- Pantallas bajas: se recorta el relleno ---------- */
+@media (max-height: 700px) {
+    .dash-kpi .admin-kpi-value { font-size: 1.3rem; }
+    body.admin-dash-body .admin-content { padding: 0.75rem 1rem; }
+    body.admin-pedidos-body .admin-content { padding: 0.75rem 1rem; }
+    body.admin-pedidos-body .pedidos-tabla tbody td { padding: 0.45rem 0.8rem; }
+}
+
+/* ---------- Móvil: sin scroll fijo es ulong hostil, se restaura ---------- */
+@media (max-width: 991.98px) {
+    body.admin-dash-body { overflow: auto; }
+    body.admin-dash-body .admin-main { height: auto; min-height: 100vh; }
+    body.admin-dash-body .admin-content { display: block; overflow: visible; }
+
+    body.admin-pedidos-body { overflow: auto; }
+    body.admin-pedidos-body .admin-main { height: auto; min-height: 100vh; }
+    body.admin-pedidos-body .admin-content { display: block; overflow: visible; }
+    body.admin-pedidos-body .pedidos-panel { display: block; }
+    body.admin-pedidos-body .pedidos-panel .table-responsive { overflow: visible; }
+
+    .admin-dash { display: block; height: auto; }
+    .admin-dash > * + * { margin-top: 0.9rem; }
+
+    .dash-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .dash-tabpanels { position: static; }
+
+    /* Sin scroll fijo, los paneles se vuelven de flujo: el gráfico necesita una
+       altura propia, si no el inset:0 se ancla fuera del panel y mide la ventana. */
+    .dash-tabpanel { position: static; height: auto; display: none; }
+    .dash-tabpanel.is-active { display: flex; flex-direction: column; }
+    .dash-tabpanel > .dash-chart { position: relative; inset: auto; height: 280px; flex: 0 0 auto; }
+
+    /* Los paneles con lista lateral se apilan: gráfica encima, lista debajo */
+    .dash-split { position: static; height: auto; display: none; grid-template-columns: minmax(0, 1fr); grid-template-rows: 240px auto; }
+    /* .dash-split es hijo del panel: hay que reactivar también al padre,
+       o el donut quedaría oculto (hereda display:none del bloque de arriba). */
+    .dash-tabpanel.is-active > .dash-split { display: grid; }
+    .dash-split > .dash-chart { position: relative; inset: auto; height: 240px; }
+    .dash-side { overflow: visible; }
+}

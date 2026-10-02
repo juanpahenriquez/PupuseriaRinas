@@ -19,5 +19,5 @@
 <link href="<?= LINK_BOOTSTRAP_CSS ?>" rel="stylesheet">
 <link href="../assets/css/custom.css?v=<?= LINK_CSS_VERSION ?>" rel="stylesheet">
 <link href="<?= LINK_FONTAWESOME_CSS ?>" rel="stylesheet">
-<link href="../assets/css/admin.css?v=8" rel="stylesheet">
+<link href="../assets/css/admin.css?v=15" rel="stylesheet">
 <script src="<?= LINK_BOOTSTRAP_JS ?>"></script>

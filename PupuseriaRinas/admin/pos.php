@@ -12,6 +12,7 @@ requerir_login();
 $pdo = db();
 $flash_ok  = leer_flash('ok');
 $flash_err = leer_flash('err');
+$abrirPanel = leer_flash('abrir') === '1';   // vuelve a abrir el panel de estados
 
 $estados   = ['pendiente', 'cocina', 'listo', 'entregado'];
 $siguiente = ['pendiente' => 'cocina', 'cocina' => 'listo', 'listo' => 'entregado'];
@@ -134,12 +135,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             flash('err', 'Estado no válido');
         }
+        // Vuelve a abrir el panel de estados para seguir avanzando el resto
+        flash('abrir', '1');
         header('Location: pos.php');
         exit;
     }
 }
 
 /* ---------------- Datos para la vista ---------------- */
+
+/* Pedidos en curso: los que todavía no se entregan. Se ordenan por estado
+   (primero lo pendiente) y luego por antigüedad, que es como los atiende la caja. */
+$abiertos = $pdo->query("SELECT p.id, p.folio, p.tipo, p.cliente, p.telefono, p.notas,
+                                p.total, p.estado, p.creado,
+                                COALESCE(GROUP_CONCAT(CONCAT(i.cantidad,'× ',i.nombre) SEPARATOR ', '),'—') AS detalle
+                         FROM pedidos p LEFT JOIN pedido_items i ON i.pedido_id = p.id
+                         WHERE p.estado IN ('pendiente','cocina','listo')
+                         GROUP BY p.id
+                         ORDER BY FIELD(p.estado,'pendiente','cocina','listo'), p.creado ASC")->fetchAll();
+
+$conteoAbiertos = ['pendiente' => 0, 'cocina' => 0, 'listo' => 0];
+foreach ($abiertos as $a) {
+    if (array_key_exists($a['estado'], $conteoAbiertos)) {
+        $conteoAbiertos[$a['estado']]++;
+    }
+}
 
 // Solo productos activos: los agotados no se venden
 $productos = $pdo->query("SELECT id, nombre, descripcion, precio, categoria, imagen
@@ -153,22 +173,24 @@ foreach ($productos as $p) {
 $categorias = array_keys($categorias);
 sort($categorias);
 
-// Pedidos abiertos (los que todavía no se entregan) para avanzar estados
-$abiertos = $pdo->query(
-    "SELECT p.id, p.folio, p.tipo, p.cliente, p.telefono, p.total, p.estado, p.creado,
-            (SELECT COALESCE(GROUP_CONCAT(CONCAT(i.cantidad,'× ',i.nombre) SEPARATOR ', '),'—')
-             FROM pedido_items i WHERE i.pedido_id = p.id) detalle
-     FROM pedidos p
-     WHERE p.estado IN ('pendiente','cocina','listo')
-     ORDER BY p.id DESC
-     LIMIT 20"
-)->fetchAll();
 
 ?><!doctype html>
 <html lang="es">
 <head>
 <?php $page_title = 'POS'; include __DIR__ . '/../modules/views/layouts/head-admin.php'; ?>
-<link rel="stylesheet" href="../assets/css/pos.css?v=4">
+<link rel="stylesheet" href="../assets/css/pos.css?v=6">
+<script>
+/* Modo pantalla completa del POS. Se aplica ANTES de pintar el <body> para que
+   el sidebar no aparezca un instante y se oculte después (mismo truco que usa
+   head-admin.php con la preferencia del menú lateral). */
+(function () {
+  try {
+    if (localStorage.getItem('rinas_pos_fullscreen') === '1') {
+      document.documentElement.classList.add('pos-fullscreen');
+    }
+  } catch (e) { /* modo privado o storage bloqueado: solo dura esta sesión */ }
+})();
+</script>
 </head>
 <body class="admin-body pos-body">
 <?php $admin_active = 'pos'; include __DIR__ . '/../modules/views/layouts/sidebar.php'; ?>

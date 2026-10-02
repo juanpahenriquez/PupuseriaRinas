@@ -73,33 +73,55 @@ $urlFiltro = function (string $cat) use ($q): string {
         $catColor = $p['categoria']==='Bebidas' ? '#E8E8F5' : ($p['categoria']==='Complementos' ? '#FFF6D3' : '#FFF4DC');
         $catBorder = $p['categoria']==='Bebidas' ? 'rgba(11,11,69,0.2)' : 'rgba(245,158,11,0.4)';
     ?>
-    <div class="col-12 col-sm-6 col-xl-4 producto-card" data-cat="<?= htmlspecialchars($p['categoria']) ?>" data-estado="<?= htmlspecialchars($p['estado']) ?>">
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3 producto-card" data-cat="<?= htmlspecialchars($p['categoria']) ?>" data-estado="<?= htmlspecialchars($p['estado']) ?>">
         <div class="admin-panel p-0 overflow-hidden h-100 d-flex flex-column" style="border:1px solid #000">
-            <div style="height:160px; background:<?= $p['categoria']==='Pupusas' ? '#fff' : ($p['categoria']==='Bebidas' ? '#FFF6D3' : '#FEF3E2') ?>; display:flex; align-items:center; justify-content:center; border-bottom:1px solid #000; overflow:hidden; position:relative">
+            <div class="producto-card__foto" style="background:<?= $p['categoria']==='Pupusas' ? '#fff' : ($p['categoria']==='Bebidas' ? '#FFF6D3' : '#FEF3E2') ?>">
                 <?php
-                    $imgSrc = $p['imagen'];
+                    // Un producto sin imagen es un caso normal (recién creado,
+                    // todavía sin foto): se pinta el plato en vez de reventar
+                    // la tarjeta con un strpos() sobre null.
+                    $imgSrc = (string)($p['imagen'] ?? '');
                     // si es ruta relativa assets/..., prepend ../ para estar en admin/
-                    $src = (strpos($imgSrc,'http')===0) ? $imgSrc : '../'.$imgSrc;
+                    $src = $imgSrc === '' ? '' : ((strpos($imgSrc,'http')===0) ? $imgSrc : '../'.$imgSrc);
                     // si es placeholder con %20, ya codificado
                     $isContain = strpos($imgSrc,'pupa_')!==false || strpos($imgSrc,'productos/')!==false;
                 ?>
-                <img src="<?= htmlspecialchars($src) ?>" alt="<?= htmlspecialchars($p['nombre']) ?>" style="<?= $isContain ? 'width:100%;height:100%;object-fit:contain;padding:0.5rem' : 'width:92px;height:92px;object-fit:cover;border-radius:50%;border:2px solid var(--rinas-naranja)' ?>" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:3rem">🍽️</div>
-                <span class="badge-rinas" style="position:absolute;top:8px;left:8px;background:<?= $catColor ?>;border:1px solid <?= $catBorder ?>;color:#111"><?= htmlspecialchars($p['categoria']) ?></span>
-                <span class="badge-rinas" style="position:absolute;top:8px;right:8px;<?= $isActivo ? 'background:#E6F4EA;border-color:rgba(10,122,66,0.25);color:#0a7a42' : 'background:#111;color:#fff;border-color:#111' ?>"><?= $isActivo ? 'Activo' : 'Agotado' ?></span>
+                <?php if ($src !== ''): ?>
+                <img src="<?= htmlspecialchars($src) ?>" alt="<?= htmlspecialchars($p['nombre']) ?>" style="<?= $isContain ? 'width:100%;height:100%;object-fit:contain;padding:0.35rem' : 'width:78px;height:78px;object-fit:cover;border-radius:50%;border:2px solid var(--rinas-naranja)' ?>" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:2.2rem">🍽️</div>
+                <?php else: ?>
+                <div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;font-size:2.2rem">🍽️</div>
+                <?php endif; ?>
+                <span class="badge-rinas" style="position:absolute;top:6px;left:6px;background:<?= $catColor ?>;border:1px solid <?= $catBorder ?>;color:#111;font-size:0.6rem;padding:0.2rem 0.45rem"><?= htmlspecialchars($p['categoria']) ?></span>
+                <span class="badge-rinas" style="position:absolute;top:6px;right:6px;font-size:0.6rem;padding:0.2rem 0.45rem;<?= $isActivo ? 'background:#E6F4EA;border-color:rgba(10,122,66,0.25);color:#0a7a42' : 'background:#111;color:#fff;border-color:#111' ?>"><?= $isActivo ? 'Activo' : 'Agotado' ?></span>
+                <!-- El precio vive dentro de la foto, en la esquina opuesta a los badges -->
+                <span class="producto-card__precio">$<?= number_format(floatval($p['precio']),2) ?></span>
             </div>
-            <div class="p-3 d-flex flex-column flex-fill">
-                <div class="d-flex justify-content-between align-items-start mb-1">
-                    <span class="small fw-bold" style="letter-spacing:0.04em"><?= $isActivo ? '● Activo' : '○ Agotado' ?></span>
-                    <span class="small fw-bold" style="font-size:1.05rem">$<?= number_format(floatval($p['precio']),2) ?></span>
+            <div class="producto-card__cuerpo">
+                <span class="producto-card__estado"><?= $isActivo ? '● Activo' : '○ Agotado' ?></span>
+                <h3 class="producto-card__nombre"><?= htmlspecialchars($p['nombre']) ?></h3>
+                <p class="producto-card__desc flex-fill"><?= htmlspecialchars($p['descripcion']) ?></p>
+                <div class="producto-card__acciones">
+                    <button class="producto-card__icono btn-editar" type="button"
+                            data-id="<?= $p['id'] ?>"
+                            data-nombre="<?= htmlspecialchars($p['nombre'],ENT_QUOTES) ?>"
+                            data-descripcion="<?= htmlspecialchars($p['descripcion'],ENT_QUOTES) ?>"
+                            data-precio="<?= $p['precio'] ?>"
+                            data-categoria="<?= $p['categoria'] ?>"
+                            data-estado="<?= $p['estado'] ?>"
+                            data-imagen="<?= htmlspecialchars((string)($p['imagen'] ?? '')) ?>"
+                            title="Editar <?= htmlspecialchars($p['nombre']) ?>"
+                            aria-label="Editar <?= htmlspecialchars($p['nombre']) ?>"><i class="fa-regular fa-pen-to-square"></i></button>
+                    <a href="productos.php?toggle=<?= $p['id'] ?>&csrf=<?= csrf_token() ?>&back=<?= urlencode($urlActualProd) ?>"
+                       class="producto-card__icono <?= $isActivo ? 'producto-card__icono--activo' : 'producto-card__icono--agotado' ?>"
+                       title="<?= $isActivo ? 'Marcar como agotado' : 'Marcar como activo' ?>"
+                       aria-label="<?= $isActivo ? 'Marcar como agotado' : 'Marcar como activo' ?>"><?= $isActivo ? '<i class="fa-solid fa-toggle-on"></i>' : '<i class="fa-solid fa-toggle-off"></i>' ?></a>
+                    <a href="productos.php?del=<?= $p['id'] ?>&csrf=<?= csrf_token() ?>&back=<?= urlencode($urlActualProd) ?>"
+                       onclick="return confirm('¿Eliminar <?= htmlspecialchars(addslashes($p['nombre'])) ?>?')"
+                       class="producto-card__icono producto-card__icono--peligro"
+                       title="Eliminar <?= htmlspecialchars($p['nombre']) ?>"
+                       aria-label="Eliminar <?= htmlspecialchars($p['nombre']) ?>"><i class="fa-regular fa-rectangle-xmark"></i></a>
                 </div>
-                <h3 class="h6 fw-bold mb-1" style="line-height:1.2"><?= htmlspecialchars($p['nombre']) ?></h3>
-                <p class="small text-muted mb-3 flex-fill" style="font-size:0.82rem;line-height:1.4"><?= htmlspecialchars($p['descripcion']) ?></p>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-sm flex-fill btn-editar" data-id="<?= $p['id'] ?>" data-nombre="<?= htmlspecialchars($p['nombre'],ENT_QUOTES) ?>" data-descripcion="<?= htmlspecialchars($p['descripcion'],ENT_QUOTES) ?>" data-precio="<?= $p['precio'] ?>" data-categoria="<?= $p['categoria'] ?>" data-estado="<?= $p['estado'] ?>" data-imagen="<?= htmlspecialchars($p['imagen']) ?>" style="border:1px solid #000; background:#fff; font-weight:700">Editar</button>
-                    <a href="productos.php?toggle=<?= $p['id'] ?>&csrf=<?= csrf_token() ?>&back=<?= urlencode($urlActualProd) ?>" class="btn btn-sm flex-fill" style="<?= $isActivo ? 'background:#000;color:#fff;border:1px solid #000' : 'background:var(--rinas-naranja);color:#fff;border:1px solid var(--rinas-naranja)' ?>;font-weight:700"><?= $isActivo ? 'Desactivar' : 'Activar' ?></a>
-                </div>
-                <a href="productos.php?del=<?= $p['id'] ?>&csrf=<?= csrf_token() ?>&back=<?= urlencode($urlActualProd) ?>" onclick="return confirm('¿Eliminar <?= htmlspecialchars(addslashes($p['nombre'])) ?>?')" class="btn btn-sm w-100 mt-2" style="border:1px solid #000;background:#fff;color:#c0392b;font-weight:700;font-size:0.75rem">Eliminar</a>
             </div>
         </div>
     </div>
@@ -335,7 +357,7 @@ $urlFiltro = function (string $cat) use ($q): string {
     <?php
       $eid = intval($old_edit['id'] ?? 0);
       $prevImg = '';
-      foreach(($productos ?? []) as $pp) if($pp['id']==$eid) { $prevImg=$pp['imagen']; break; }
+      foreach(($productos ?? []) as $pp) if($pp['id']==$eid) { $prevImg=(string)($pp['imagen'] ?? ''); break; }
     ?>
     document.getElementById('imgPreviewEditar').src = "<?= $prevImg ? '../'.$prevImg : '' ?>";
     if(bsEditar) bsEditar.show();

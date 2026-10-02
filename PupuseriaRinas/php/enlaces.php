@@ -33,7 +33,7 @@ define('LINK_SPLIDE_CSS', LINK_SPLIDE . '/css/splide.min.css');
 define('LINK_SPLIDE_JS', LINK_SPLIDE . '/js/splide.min.js');
 
 // Versión única del CSS propio (público + admin) para romper cachés al desplegar
-define('LINK_CSS_VERSION', '38');
+define('LINK_CSS_VERSION', '54');
 
 if (!function_exists('rinas_head_publico')) {
     function rinas_head_publico(string $customCss = 'assets/css/custom.css?v=' . LINK_CSS_VERSION): void

@@ -93,15 +93,15 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .header-rinas.scrolled .navbar-rinas .nav-link {
-    color: var(--rinas-azul);
+    color: orange;
 }
 
 .header-rinas.scrolled .navbar-rinas .nav-link:hover {
-    color: var(--rinas-azul-hover);
+    color: orange;
 }
 
 .header-rinas.scrolled .navbar-rinas .navbar-toggler {
-    border-color: var(--rinas-azul);
+    border-color: orange;
 }
 
 .header-rinas.scrolled .navbar-rinas .navbar-toggler-icon {
@@ -290,6 +290,13 @@ h1, h2, h3, h4, h5, h6,
 .enlaces-rinas {
     background: linear-gradient(to bottom, #fff 0%, var(--rinas-crema) 100%);
     padding: clamp(2.75rem, 5.5vw, 4.75rem) 0;
+    /* La .row de Bootstrap usa margin-inline negativo (-8px con g-3, -12px con
+       g-lg-4) y esta seccion es full-bleed (padding horizontal 0), asi que ese
+       margen se sale de la pagina y genera scroll horizontal. clip lo contiene
+       sin tocar el diseno y sin crear contenedor de scroll, de modo que
+       overflow-y sigue visible y no se recortan las sombras ni el translateY
+       del hover de .rinas-card. */
+    overflow-x: clip;
 }
 
 /* --- Encabezado de la seccion --- */

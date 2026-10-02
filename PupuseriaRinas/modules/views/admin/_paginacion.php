@@ -2,13 +2,23 @@
 /**
  * Parcial: barra de paginación. Mismo contrato de $paginacion que _buscador.php.
  * Los enlaces conservan los filtros actuales (params) y la búsqueda (q).
+ *
+ * Con $pieContador = true el bloque se pinta como pie DENTRO del panel: el
+ * contador de resultados ("Mostrando 1–10 de 24 · página 1 de 3") a la
+ * izquierda y los números a la derecha. Así el texto de la paginación queda
+ * abajo, junto a los botones, y no sobre la tabla. Lo usa pedidos.php.
+ *
+ * Sin la bandera el comportamiento es el de siempre: solo los números,
+ * centrados, tal como lo consumen productos.php y usuarios.php.
  */
 $paginacion = $paginacion ?? [
     'base' => '', 'q' => '', 'params' => [], 'total' => 0,
     'porPagina' => 10, 'pagina' => 1, 'etiqueta' => '', 'placeholder' => 'Buscar…',
 ];
 $pgNav = paginar((int) $paginacion['total'], (int) $paginacion['porPagina'], (int) $paginacion['pagina']);
-if ($pgNav['paginas'] > 1):
+$enPie = !empty($pieContador);
+
+if ($enPie || $pgNav['paginas'] > 1):
     $urlPag = function (int $n) use ($paginacion): string {
         $params = array_filter((array) $paginacion['params'], fn($v) => $v !== '' && $v !== null);
         if ((string) $paginacion['q'] !== '') {
@@ -27,7 +37,27 @@ if ($pgNav['paginas'] > 1):
             $numeros[] = $i;
         }
     }
-?>
+
+    // Contador que antes vivía arriba, en _buscador.php
+    $resumen = '';
+    if ($enPie) {
+        if ($pgNav['total'] === 0) {
+            $resumen = 'Sin resultados';
+        } else {
+            $resumen = 'Mostrando <strong>' . $pgNav['desde'] . '–' . $pgNav['hasta'] . '</strong> de <strong>'
+                . $pgNav['total'] . '</strong> ' . htmlspecialchars((string) $paginacion['etiqueta']);
+        }
+        if ((string) $paginacion['q'] !== '') {
+            $resumen .= ' para «' . htmlspecialchars((string) $paginacion['q']) . '»';
+        }
+        if ($pgNav['paginas'] > 1) {
+            $resumen .= ' · página <strong>' . $pgNav['pagina'] . '</strong> de <strong>' . $pgNav['paginas'] . '</strong>';
+        }
+        echo '<div class="admin-paginacion-pie">';
+        echo '<p class="admin-paginacion-resumen">' . $resumen . '</p>';
+    }
+
+    if ($pgNav['paginas'] > 1): ?>
 <nav class="admin-paginacion" aria-label="Paginación de <?= htmlspecialchars((string) $paginacion['etiqueta']) ?>">
     <ul class="pagination mb-0 flex-wrap">
         <li class="page-item <?= $pgNav['pagina'] <= 1 ? 'disabled' : '' ?>">
@@ -46,4 +76,9 @@ if ($pgNav['paginas'] > 1):
         </li>
     </ul>
 </nav>
-<?php endif; ?>
+    <?php endif;
+
+    if ($enPie) {
+        echo '</div>';
+    }
+endif;

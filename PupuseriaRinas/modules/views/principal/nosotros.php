@@ -108,7 +108,7 @@
         <div class="row g-4 mt-1">
             <div class="col-12 col-md-4">
                 <figure class="galeria-card">
-                    <img src="assets/img/galeria_1_600.jpg" alt="Ambiente Pupusería Rinas" loading="lazy">
+                    <img src="assets/img/galeria_1_600.jpg?v=<?= LINK_CSS_VERSION ?>" alt="Ambiente Pupusería Rinas" loading="lazy">
                     <figcaption>Ambiente Rinas</figcaption>
                 </figure>
             </div>

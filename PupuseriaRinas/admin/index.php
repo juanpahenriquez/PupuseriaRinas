@@ -65,21 +65,35 @@ foreach ($top as $r) {
     ];
 }
 
-// — Pedidos recientes (con detalle de ítems) —
-$recs = $pdo->query("SELECT p.*, COALESCE(GROUP_CONCAT(CONCAT(i.cantidad,'× ',i.nombre) SEPARATOR ', '),'—') detalle
-     FROM pedidos p LEFT JOIN pedido_items i ON i.pedido_id = p.id
-     GROUP BY p.id ORDER BY p.id DESC LIMIT 5")->fetchAll();
-$tipoLabel = ['llevar' => 'Llevar', 'recoger' => 'Recoger'];
-$pedidos_recientes = [];
-foreach ($recs as $r) {
-    $pedidos_recientes[] = [
-        ($r['folio'] !== '' ? $r['folio'] : '#' . $r['id']),
-        $tipoLabel[$r['tipo']] ?? $r['tipo'],
-        $r['detalle'],
-        (float) $r['total'],
-        $r['estado'],
-        hace($r['creado']),
-    ];
+// — Pedidos por hora (hoy, 0–23) —
+$ventas_hora  = array_fill(0, 24, 0.0);
+$pedidos_hora = array_fill(0, 24, 0);
+$stmt = $pdo->query("SELECT HOUR(creado) h, COALESCE(SUM(total),0) v, COUNT(*) c
+     FROM pedidos WHERE DATE(creado) = CURDATE() GROUP BY h");
+foreach ($stmt as $r) {
+    $h = (int) $r['h'];
+    if ($h >= 0 && $h < 24) {
+        $ventas_hora[$h]  = (float) $r['v'];
+        $pedidos_hora[$h] = (int) $r['c'];
+    }
+}
+
+/* — Pedidos por estado —
+   SIN filtro de fecha a propósito: esta gráfica es elEmbudo de trabajo de la
+   cocina, así que cuenta todos los pedidos sin importar el día. Filtrar por
+   "hoy" hacía que el KPI de "Pedidos pendientes" (4) y esta pestaña (3) se
+   contradijeran en el mismo dashboard. */
+$estadosLabels = ['pendiente' => 'Pendiente', 'cocina' => 'En cocina', 'listo' => 'Listo', 'entregado' => 'Entregado'];
+$conteoEstados = array_fill_keys(array_keys($estadosLabels), 0);
+$stmt = $pdo->query("SELECT estado, COUNT(*) c FROM pedidos GROUP BY estado");
+foreach ($stmt as $r) {
+    if (array_key_exists($r['estado'], $conteoEstados)) {
+        $conteoEstados[$r['estado']] = (int) $r['c'];
+    }
+}
+$estados_hoy = [];
+foreach ($estadosLabels as $clave => $lab) {
+    $estados_hoy[] = ['estado' => $clave, 'label' => $lab, 'n' => $conteoEstados[$clave]];
 }
 
 // — Horario de hoy —
@@ -108,7 +122,10 @@ $mock = [
     'ticket_meta'         => $ticketMeta,
     'ticket_meta_pct'     => ($ticket > 0 && $ticketMeta > 0) ? min(100, (int) round($ticket / $ticketMeta * 100)) : 0,
     'top_productos'       => $top_productos,
-    'pedidos_recientes'   => $pedidos_recientes,
+    'horas'               => array_map(static fn($h) => str_pad((string) $h, 2, '0', STR_PAD_LEFT) . 'h', range(0, 23)),
+    'ventas_hora'         => $ventas_hora,
+    'pedidos_hora'        => $pedidos_hora,
+    'estados_hoy'         => $estados_hoy,
     'total_pedidos'       => (int) $pdo->query("SELECT COUNT(*) FROM pedidos")->fetchColumn(),
 ];
 ?><!doctype html>
@@ -116,7 +133,7 @@ $mock = [
 <head>
 <?php $page_title='Dashboard'; include __DIR__ . "/../modules/views/layouts/head-admin.php"; ?>
 </head>
-<body class="admin-body">
+<body class="admin-body admin-dash-body">
 <?php $admin_active='dashboard'; include __DIR__ . "/../modules/views/layouts/sidebar.php"; ?>
 <div class="admin-main">
 <?php $admin_title='Dashboard'; $admin_sub='Resumen operativo · ' . date('d/m/Y'); include __DIR__ . "/../modules/views/layouts/header-admin.php"; ?>

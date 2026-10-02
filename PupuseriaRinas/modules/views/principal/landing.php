@@ -29,367 +29,400 @@ if ($pdoLanding) {
     }
 }
 ?>
-<section class="hero-rinas hero-video p-4 p-md-5">
-    <video class="hero-video-bg" autoplay muted loop playsinline preload="metadata">
-        <source src="assets/video/8448183-hd_1920_1080_24fps.mp4" type="video/mp4">
-    </video>
-    <div class="container position-relative">
-        <div class="row align-items-center g-4">
-            <div class="col-12 col-md-7">
-                <h1 class="display-4 fw-bold mb-3">
-                    <span class="d-block text-white">Café caliente</span>
-                    <span class="d-block text-rinas-naranja">y Pupusas Rinas</span>
-                </h1>
+<!-- =====================================================================
+     Landing Rinas ·-rediseño editorial
+     Bloques: hero a sangre -> tres accesos -> galería a pantalla total ->
+     producto destacado -> licuados -> equipo -> cinta de palabras.
+     Clases con prefijo `nl-`: viven en assets/css/landing.css y no tocan
+     las reglas que custom.css comparte con menu/ubicacion/nosotros.
+     ===================================================================== -->
 
-                <p class="lead mb-4 text-white-50">Recoge en tienda o pide para llevar. Sabor casero todos los días.</p>
+<!-- ------------------------------------------------------- 01 · hero --- -->
+<section class="nl-hero" id="inicio">
+    <div class="nl-hero-media">
+        <video class="nl-hero-video" data-parallax="9" autoplay muted loop playsinline preload="metadata"
+               poster="assets/img/galeria/pupusas-comal.jpg?v=<?= LINK_CSS_VERSION ?>">
+            <source src="assets/video/8448183-hd_1920_1080_24fps.mp4" type="video/mp4">
+        </video>
+        <span class="nl-hero-veil" aria-hidden="true"></span>
+    </div>
 
-                <div class="d-flex gap-3 align-items-center mb-4 flex-wrap hero-cta">
-                    <a href="https://wa.me/50370000000?" class="btn rounded-pill px-5 py-2 btn-rinas-naranja">HAZ TU PEDIDO!</a>
-                </div>
+    <div class="nl-hero-content">
+        <div class="container">
+            <span class="nl-eyebrow nl-eyebrow--claro" data-reveal>Pupusería desde 2018</span>
 
+            <h1 class="nl-hero-title">
+                <span data-reveal>Café caliente</span>
+                <span data-reveal data-reveal-delay="80">y pupusas</span>
+                <span class="nl-hero-accent" data-reveal data-reveal-delay="160">Rinas</span>
+            </h1>
+
+            <p class="nl-hero-lead" data-reveal data-reveal-delay="240">
+                Masa hecha al momento, café de la casa y el sabor de siempre.
+                Recoge en tienda o pide para llevar.
+            </p>
+
+            <div class="nl-hero-cta" data-reveal data-reveal-delay="320">
+                <a class="nl-btn nl-btn--naranja" href="https://wa.me/50370000000?" target="_blank" rel="noopener">Haz tu pedido</a>
             </div>
         </div>
     </div>
+
+    <a class="nl-hero-scroll" href="#enlaces" aria-label="Ir a las secciones">
+        <span class="nl-hero-scroll-line" aria-hidden="true"></span>
+    </a>
 </section>
 
-
-<section class="enlaces-rinas" aria-labelledby="enlacesTitulo">
-        <div class="row g-3 g-lg-4">
-            <div class="col-12 col-md-4">
-                <a href="menu.php" class="rinas-card">
-                    <img class="rinas-card-foto" src="assets/img/MENU LANDING.png"
-                         alt="" aria-hidden="true" loading="lazy" decoding="async">
-                    <span class="rinas-card-contenido">
-                        <span class="rinas-card-icon" aria-hidden="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h15l-1.5 12.5a1 1 0 0 1-1 .5H5.5a1 1 0 0 1-1-.5L3 8h3z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
-                        </span>
-                        <span class="rinas-card-pie">
-                            <span class="rinas-card-datos">
-                                <span class="rinas-card-titulo">Ver Menú</span>
-                                <span class="rinas-card-texto"><?= htmlspecialchars($textoMenu) ?></span>
-                            </span>
-                            <span class="rinas-card-flecha" aria-hidden="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                            </span>
-                        </span>
-                    </span>
-                </a>
-            </div>
-
-            <div class="col-12 col-md-4">
-                <a href="ubicacion.php" class="rinas-card">
-                    <img class="rinas-card-foto" src="assets/img/UBICACION LANDING.png"
-                         alt="" aria-hidden="true" loading="lazy" decoding="async">
-                    <span class="rinas-card-contenido">
-                        <span class="rinas-card-icon" aria-hidden="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                        </span>
-                        <span class="rinas-card-pie">
-                            <span class="rinas-card-datos">
-                                <span class="rinas-card-titulo">Ubicación</span>
-                                <span class="rinas-card-texto"><?= htmlspecialchars($textoUbicacion) ?></span>
-                            </span>
-                            <span class="rinas-card-flecha" aria-hidden="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                            </span>
-                        </span>
-                    </span>
-                </a>
-            </div>
-
-            <div class="col-12 col-md-4">
-                <a href="nosotros.php" class="rinas-card">
-                    <img class="rinas-card-foto" src="assets/img/ACERCA DE NOSOTROS LANDING.png"
-                         alt="" aria-hidden="true" loading="lazy" decoding="async">
-                    <span class="rinas-card-contenido">
-                        <span class="rinas-card-icon" aria-hidden="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 5a3.5 3.5 0 0 1 0 7"/><path d="M17.5 14.5a6.5 6.5 0 0 1 4 5.5"/></svg>
-                        </span>
-                        <span class="rinas-card-pie">
-                            <span class="rinas-card-datos">
-                                <span class="rinas-card-titulo">Nosotros</span>
-                                <span class="rinas-card-texto">Desde 2018 haciendo café y pupusas</span>
-                            </span>
-                            <span class="rinas-card-flecha" aria-hidden="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                            </span>
-                        </span>
-                    </span>
-                </a>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- =========================================================
-     Galería: carrusel principal sincronizado con miniaturas (Splide)
-     ========================================================= -->
-<section class="landing-galeria-rinas" aria-labelledby="galeriaTitulo">
+<!-- ------------------------------------------- 02 · tres accesos ------- -->
+<section class="nl-links" id="enlaces" aria-labelledby="nlEnlacesTitulo">
     <div class="container">
-        <span class="landing-galeria-eyebrow">Galería</span>
-        <h2 class="landing-galeria-title" id="galeriaTitulo">Directo desde nuestro comal</h2>
-        <p class="landing-galeria-lead mb-4">Pupusas recién hechas, licuados naturales y el ambiente de la casa.</p>
+        <header class="nl-links-head">
+            <h2 class="nl-title" id="nlEnlacesTitulo" data-reveal data-reveal-delay="60">
+                Tres entradas,<br>un mismo comal
+            </h2>
+        </header>
+    </div>
 
-        <div id="main-slider" class="splide" aria-label="Galería de Pupusería Rinas">
+    <div class="nl-links-grid">
+        <a class="nl-link" href="menu.php" data-reveal>
+            <span class="nl-link-media" data-parallax="8" aria-hidden="true">
+                <img src="assets/img/MENU LANDING.png" alt="" loading="lazy" decoding="async">
+            </span>
+            <span class="nl-link-veil" aria-hidden="true"></span>
+            <span class="nl-link-body">
+                <span class="nl-link-num">01</span>
+                <span class="nl-link-title">Ver Menú</span>
+                <span class="nl-link-text"><?= htmlspecialchars($textoMenu) ?></span>
+                <span class="nl-link-go" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                </span>
+            </span>
+        </a>
+
+        <a class="nl-link" href="ubicacion.php" data-reveal data-reveal-delay="90">
+            <span class="nl-link-media" data-parallax="10" aria-hidden="true">
+                <img src="assets/img/UBICACION LANDING.png" alt="" loading="lazy" decoding="async">
+            </span>
+            <span class="nl-link-veil" aria-hidden="true"></span>
+            <span class="nl-link-body">
+                <span class="nl-link-num">02</span>
+                <span class="nl-link-title">Ubicación</span>
+                <span class="nl-link-text"><?= htmlspecialchars($textoUbicacion) ?></span>
+                <span class="nl-link-go" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                </span>
+            </span>
+        </a>
+
+        <a class="nl-link" href="nosotros.php" data-reveal data-reveal-delay="180">
+            <span class="nl-link-media" data-parallax="8" aria-hidden="true">
+                <img src="assets/img/ACERCA DE NOSOTROS LANDING.png" alt="" loading="lazy" decoding="async">
+            </span>
+            <span class="nl-link-veil" aria-hidden="true"></span>
+            <span class="nl-link-body">
+                <span class="nl-link-num">03</span>
+                <span class="nl-link-title">Nosotros</span>
+                <span class="nl-link-text">Desde 2018 haciendo café y pupusas</span>
+                <span class="nl-link-go" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                </span>
+            </span>
+        </a>
+    </div>
+</section>
+
+<!-- ------------------------------------------ 03 · galería a pantalla --- -->
+<section class="nl-gallery" id="galeria" aria-labelledby="nlGaleriaTitulo">
+
+    <!-- Banner: 100svh, a sangre, sin radio ni sombra. El encabezado va dentro
+         y superpuesto (ver .nl-gallery-intro), y el parallax corre sobre
+         .nl-slide-media, sobredimensionada, para no destapar bordes. -->
+    <div class="nl-gallery-banner">
+        <header class="nl-gallery-intro">
+            <span class="nl-eyebrow" data-reveal>Galería</span>
+            <h2 class="nl-title" id="nlGaleriaTitulo" data-reveal data-reveal-delay="60">
+                Directo desde<br>nuestro comal
+            </h2>
+        </header>
+
+        <div id="nlGaleriaMain" class="splide nl-splide" aria-label="Galería de Pupusería Rinas">
             <div class="splide__track">
                 <ul class="splide__list">
-                    <li class="splide__slide"><img src="assets/img/galeria/pupusas-comal.jpg" alt="Pupusas recién salidas del comal"></li>
-                    <li class="splide__slide"><img src="assets/img/galeria/pupusas-mesa.jpg" alt="El ambiente de la casa" loading="lazy"></li>
-                    <li class="splide__slide"><img src="assets/img/pupa_camaron.png" alt="Pupusa de camarón Sabor Mediterráneo" loading="lazy"></li>
-                    <li class="splide__slide"><img src="assets/img/pupa_chile.png" alt="Pupusa de chile" loading="lazy"></li>
-                    <li class="splide__slide"><img src="assets/img/licuado.png" alt="Licuado clásico con banana" loading="lazy"></li>
-                    <li class="splide__slide"><img src="assets/img/galeria_1_600.jpg" alt="Ambiente Pupusería Rinas" loading="lazy"></li>
+                    <li class="splide__slide">
+                        <span class="nl-slide-media" data-parallax="8">
+                            <img src="assets/img/galeria/pupusas-comal.jpg?v=<?= LINK_CSS_VERSION ?>" alt="Pupusas recién salidas del comal">
+                        </span>
+                        <span class="nl-slide-cap">Recién hechas</span>
+                    </li>
+                    <li class="splide__slide">
+                        <span class="nl-slide-media" data-parallax="8">
+                            <img src="assets/img/galeria/pupusas-mesa.jpg" alt="El ambiente de la casa" loading="lazy">
+                        </span>
+                        <span class="nl-slide-cap">El ambiente</span>
+                    </li>
+                    <li class="splide__slide" data-fit="contain">
+                        <span class="nl-slide-media" data-parallax="8">
+                            <img src="assets/img/pupa_camaron.png" alt="Pupusa de camarón Sabor Mediterráneo" loading="lazy">
+                        </span>
+                        <span class="nl-slide-cap">Sabor Mediterráneo</span>
+                    </li>
+                    <li class="splide__slide" data-fit="contain">
+                        <span class="nl-slide-media" data-parallax="8">
+                            <img src="assets/img/pupa_chile.png" alt="Pupusa de chile" loading="lazy">
+                        </span>
+                        <span class="nl-slide-cap">Con su punta</span>
+                    </li>
+                    <li class="splide__slide" data-fit="contain">
+                        <span class="nl-slide-media" data-parallax="8">
+                            <img src="assets/img/licuado.png" alt="Licuado clásico con banana" loading="lazy">
+                        </span>
+                        <span class="nl-slide-cap">Licuado de la casa</span>
+                    </li>
+                    <li class="splide__slide">
+                        <span class="nl-slide-media" data-parallax="8">
+                            <img src="assets/img/galeria_1_600.jpg?v=<?= LINK_CSS_VERSION ?>" alt="Ambiente Pupusería Rinas" loading="lazy">
+                        </span>
+                        <span class="nl-slide-cap">Pasa por Rinas</span>
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <div id="thumbnail-slider" class="splide" aria-label="Ir a la imagen de la galería">
+        <div class="nl-gallery-bar">
+            <div class="nl-gallery-bars">
+                <button type="button" aria-label="Ir a la foto 1"><span></span></button>
+                <button type="button" aria-label="Ir a la foto 2"><span></span></button>
+                <button type="button" aria-label="Ir a la foto 3"><span></span></button>
+                <button type="button" aria-label="Ir a la foto 4"><span></span></button>
+                <button type="button" aria-label="Ir a la foto 5"><span></span></button>
+                <button type="button" aria-label="Ir a la foto 6"><span></span></button>
+            </div>
+            <span class="nl-gallery-count"><b id="nlGaleriaActual">01</b> / <span id="nlGaleriaTotal">06</span></span>
+        </div>
+    </div>
+
+    <!-- Banda de miniaturas a sangre: sin .container, para que las seis
+         repartan todo el ancho del bloque crema. -->
+    <div class="nl-gallery-thumbs-wrap">
+        <div id="nlGaleriaThumbs" class="splide nl-thumbs" aria-label="Ir a la imagen de la galería">
             <div class="splide__track">
                 <ul class="splide__list">
-                    <li class="splide__slide"><img src="assets/img/galeria/pupusas-comal.jpg" alt=""></li>
+                    <li class="splide__slide"><img src="assets/img/galeria/pupusas-comal.jpg?v=<?= LINK_CSS_VERSION ?>" alt=""></li>
                     <li class="splide__slide"><img src="assets/img/galeria/pupusas-mesa.jpg" alt="" loading="lazy"></li>
                     <li class="splide__slide"><img src="assets/img/pupa_camaron.png" alt="" loading="lazy"></li>
                     <li class="splide__slide"><img src="assets/img/pupa_chile.png" alt="" loading="lazy"></li>
                     <li class="splide__slide"><img src="assets/img/licuado.png" alt="" loading="lazy"></li>
-                    <li class="splide__slide"><img src="assets/img/galeria_1_600.jpg" alt="" loading="lazy"></li>
+                    <li class="splide__slide"><img src="assets/img/galeria_1_600.jpg?v=<?= LINK_CSS_VERSION ?>" alt="" loading="lazy"></li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
 
+<!-- --------------------------------------------- 04 · producto -------- -->
+<section class="nl-feature" id="especialidad" aria-labelledby="nlEspecialidadTitulo">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-12 col-lg-6 order-lg-1">
+                <div class="nl-feature-visual">
+                    <span class="nl-feature-ring" aria-hidden="true"></span>
+                    <img class="nl-feature-img" data-parallax="7"
+                         src="assets/img/pupa_camaron.png"
+                         alt="Pupusa de camarón Sabor Mediterráneo" loading="lazy">
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6 order-lg-2">
+                <span class="nl-eyebrow nl-eyebrow--claro" data-reveal>Sabor Mediterráneo</span>
+                <h2 class="nl-display" id="nlEspecialidadTitulo" data-reveal data-reveal-delay="60">
+                    Pupusa<br>de Camarón
+                </h2>
+                <p class="nl-lead" data-reveal data-reveal-delay="120">
+                    Camarón jugoso y queso fundido en tortilla gruesa dorada a la plancha.
+                    Un giro costeño con alma salvadoreña: marisco fresco, queso cremoso
+                    y el sazón de la casa, servida siempre caliente con curtido y salsa.
+                </p>
+
+                <div class="nl-feature-buy">
+                    <div>
+                        <span class="nl-label">Precio</span>
+                        <span class="nl-price" id="nlPrecio">$1.50</span>
+                    </div>
+                    <div>
+                        <span class="nl-label">Unidades</span>
+                        <div class="nl-sizes" id="nlTamanos">
+                            <button class="is-active" type="button" data-price="1.50">1</button>
+                            <button type="button" data-price="4.50">3</button>
+                            <button type="button" data-price="9.00">6</button>
+                            <button type="button" data-price="18.00">12</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nl-feature-cta">
+                    <a class="nl-btn nl-btn--naranja" href="llevar.php">Pide para llevar</a>
+                    <button class="nl-icon-btn" type="button" data-fav aria-pressed="false"
+                            aria-label="Marcar como favorito">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-4.5-2.8-7-6.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 7 7.5c-2.5 3.7-7 6.5-7 6.5z"/></svg>
+                    </button>
+                    <a class="nl-btn nl-btn--linea" href="menu.php">Ver menú</a>
+                </div>
+
+                <div class="nl-feature-meta">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        Listo en 15 min
+                    </span>
+                    <span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ----------------------------------------------- 05 · licuados ------- -->
+<section class="nl-smoothies" id="bebidas" aria-labelledby="nlLicuadoTitulo">
+    <div class="container">
+        <div class="nl-smoothies-grid">
+            <div class="nl-smoothies-copy">
+                <span class="nl-eyebrow" data-reveal>Bebidas de la casa</span>
+                <h2 class="nl-display" id="nlLicuadoTitulo" data-reveal data-reveal-delay="60">Licuados</h2>
+                <p class="nl-lead" data-reveal data-reveal-delay="120">
+                    Una forma deliciosa de acompañar tus pupusas.
+                </p>
+
+                <ul class="nl-tags" aria-label="Ingredientes destacados" data-reveal data-reveal-delay="180">
+                    <li>Frutas</li>
+                    <li>Leche</li>
+                    <li>Naturales</li>
+                </ul>
+
+                <a class="nl-btn nl-btn--azul" href="llevar.php" data-reveal data-reveal-delay="240">
+                    Pide para llevar
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            <div class="nl-smoothies-visual">
+                <span class="nl-disc" data-parallax="12" aria-hidden="true"></span>
+
+                <div id="nlLicuadoCarousel" class="carousel slide nl-licuado-carousel"
+                     data-bs-ride="carousel" data-bs-interval="4200" aria-label="Tipos de licuado">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img class="licuado-img" src="assets/img/licuado.png" alt="Licuado clásico con banana" loading="lazy">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="licuado-img" src="assets/img/fresa.png" alt="Licuado de fresa" loading="lazy">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="licuado-img" src="assets/img/oreo.png" alt="Licuado de Oreo" loading="lazy">
+                        </div>
+                    </div>
+
+                    <button class="nl-carousel-arrow nl-carousel-arrow--prev" type="button"
+                            data-bs-target="#nlLicuadoCarousel" data-bs-slide="prev" aria-label="Licuado anterior">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l7-7-7-7"/></svg>
+                    </button>
+                    <button class="nl-carousel-arrow nl-carousel-arrow--next" type="button"
+                            data-bs-target="#nlLicuadoCarousel" data-bs-slide="next" aria-label="Licuado siguiente">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                    </button>
+
+                    <div class="nl-licuado-dots">
+                        <button class="active" type="button" data-bs-target="#nlLicuadoCarousel" data-bs-slide-to="0" aria-label="Licuado clásico" aria-current="true"></button>
+                        <button type="button" data-bs-target="#nlLicuadoCarousel" data-bs-slide-to="1" aria-label="Licuado de fresa"></button>
+                        <button type="button" data-bs-target="#nlLicuadoCarousel" data-bs-slide-to="2" aria-label="Licuado de Oreo"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- --------------------------------------------------- 06 · equipo ------ -->
+<section class="nl-join" id="equipo" aria-labelledby="nlEquipoTitulo">
+    <div class="container">
+        <div class="nl-join-grid">
+            <div class="nl-join-intro">
+                <span class="nl-eyebrow nl-eyebrow--claro" data-reveal>Únete al equipo</span>
+                <h2 class="nl-display" id="nlEquipoTitulo" data-reveal data-reveal-delay="60">
+                    Trabaja<br>con nosotros
+                </h2>
+                <p class="nl-lead" data-reveal data-reveal-delay="120">
+                    ¿Te apasiona cocinar, servir o llevar nuestro sabor?
+                    Encuentra tu lugar en el equipo Rinas.
+                </p>
+                <ul class="nl-tags nl-tags--ghost" data-reveal data-reveal-delay="180">
+                    <li>Cocina</li>
+                    <li>Servicio</li>
+                    <li>Reparto</li>
+                </ul>
+            </div>
+
+            <ul class="nl-join-list" data-reveal data-reveal-delay="120">
+                <li>
+                    <a class="nl-role" target="_blank" rel="noopener"
+                       href="https://wa.me/50370000000?text=Hola%20quiero%20aplicar%20para%20Cocina%20en%20Rinas"
+                       aria-label="Postular a Cocina por WhatsApp">
+                        <span class="nl-role-num">01</span>
+                        <span>
+                            <span class="nl-role-name">Cocina</span>
+                            <span class="nl-role-desc">Prepara pupusas con sazón casero y forma parte del corazón de Rinas.</span>
+                        </span>
+                        <span class="nl-role-go" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nl-role" target="_blank" rel="noopener"
+                       href="https://wa.me/50370000000?text=Hola%20quiero%20aplicar%20para%20Servicio%20en%20Rinas"
+                       aria-label="Postular a Servicio por WhatsApp">
+                        <span class="nl-role-num">02</span>
+                        <span>
+                            <span class="nl-role-name">Servicio</span>
+                            <span class="nl-role-desc">Ofrece atención cercana y ágil para que cada visita se sienta como en casa.</span>
+                        </span>
+                        <span class="nl-role-go" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nl-role" target="_blank" rel="noopener"
+                       href="https://wa.me/50370000000?text=Hola%20quiero%20aplicar%20para%20Reparto%20en%20Rinas"
+                       aria-label="Postular a Reparto por WhatsApp">
+                        <span class="nl-role-num">03</span>
+                        <span>
+                            <span class="nl-role-name">Reparto</span>
+                            <span class="nl-role-desc">Lleva el sabor Rinas a domicilio con puntualidad y conocimiento de la ruta.</span>
+                        </span>
+                        <span class="nl-role-go" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- -------------------------------------------- cinta de palabras -------- -->
+<!-- Decorativa: aria-hidden para que no se lea en voz alta -->
+<div class="nl-marquee" aria-hidden="true">
+    <div class="nl-marquee-track">
+        <span>Pupusas</span><span>&#183;</span><span>Café de la casa</span><span>&#183;</span>
+        <span>Comal</span><span>&#183;</span><span>Curtido</span><span>&#183;</span>
+        <span>Salsa</span><span>&#183;</span><span>Caldo</span><span>&#183;</span>
+        <span>Pupusas</span><span>&#183;</span><span>Café de la casa</span><span>&#183;</span>
+        <span>Comal</span><span>&#183;</span><span>Curtido</span><span>&#183;</span>
+        <span>Salsa</span><span>&#183;</span><span>Caldo</span><span>&#183;</span>
+    </div>
+</div>
+
 <script src="<?= LINK_SPLIDE_JS ?>"></script>
-<script>
-(function(){
-  if (!window.Splide) return; // CDN caído: no romper el resto de la página
-
-  var main = new Splide( '#main-slider', {
-    type       : 'fade',
-    heightRatio: 0.45,
-    pagination : false,
-    arrows     : false,
-    cover      : true,
-  } );
-
-  var thumbnails = new Splide( '#thumbnail-slider', {
-    rewind          : true,
-    fixedWidth      : 104,
-    fixedHeight     : 58,
-    isNavigation    : true,
-    gap             : 10,
-    focus           : 'center',
-    pagination      : false,
-    cover           : true,
-    dragMinThreshold: {
-      mouse: 4,
-      touch: 10,
-    },
-    breakpoints : {
-      640: {
-        fixedWidth  : 66,
-        fixedHeight : 38,
-      },
-    },
-  } );
-
-  main.sync( thumbnails );
-  main.mount();
-  thumbnails.mount();
-})();
-</script>
-
-<section class="destacado-rinas py-4 py-md-5">
-    <div class="">
-        <div class="row align-items-center g-4 g-lg-5">
-            <!-- Visual: circulo + pupusa como en referencia Nike -->
-            <div class="col-12 col-lg-6">
-                <div class="destacado-visual">
-                    <div class="destacado-circulo"></div>
-                    <img class="destacado-img" src="assets/img/pupa_camaron.png" alt="Pupusa de camarón Sabor Mediterráneo" loading="lazy">
-                </div>
-            </div>
-            <!-- Detalle: pill + titulo + texto + precio/sizes + botones como Nike -->
-            <div class="col-12 col-lg-6">
-                <span class="destacado-pill">Sabor Mediterráneo</span>
-                <h2 class="destacado-titulo">Pupusa de<br>Camarón</h2>
-                <p class="destacado-desc">Camarón jugoso y queso fundido en tortilla gruesa dorada a la plancha. Un giro costeño con alma salvadoreña: marisco fresco, queso cremoso y el sazón de la casa, servida siempre caliente con curtido y salsa.</p>
-                <div class="row g-3 mb-3">
-                    <div class="col-5 col-sm-4">
-                        <div class="destacado-label">Precio:</div>
-                        <div class="destacado-price" id="destacadoPrice">$1.50</div>
-                    </div>
-                    <div class="col-7 col-sm-8">
-                        <div class="destacado-label">Unidades:</div>
-                        <div class="destacado-sizes" id="destacadoSizes">
-                            <button class="size-pill active" type="button" data-qty="1" data-price="1.50">1</button>
-                            <button class="size-pill" type="button" data-qty="3" data-price="4.50">3</button>
-                            <button class="size-pill" type="button" data-qty="6" data-price="9.00">6</button>
-                            <button class="size-pill" type="button" data-qty="12" data-price="18.00">12</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
-                    <a href="llevar.php" class="btn btn-destacado-principal">Pide para llevar</a>
-                    <button class="btn-fav" type="button" aria-label="Favorito"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-4.5-2.8-7-6.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 7 7.5c-2.5 3.7-7 6.5-7 6.5z"/></svg></button>
-                    <a href="menu.php" class="btn btn-destacado-sec">Ver Menú</a>
-                </div>
-                <div class="destacado-chips">
-                    <span class="chip-rinas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 15 min</span>                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<section class="licuado-rinas" aria-labelledby="licuadoTitulo">
-    <div class="">
-        <div class="licuado-stages">
-            <div class="row g-0 align-items-stretch">
-                <div class="col-12 col-lg-6">
-                    <div class="licuado-copy">
-                        <span class="licuado-eyebrow">BEBIDAS DE LA CASA</span>
-                        <h2 class="licuado-title" id="licuadoTitulo">Licuados</h2>
-                        <p class="licuado-lead">Una forma deliciosa de acompañar tus pupusas.</p>
-                        <div class="licuado-ingredients" aria-label="Ingredientes destacados">
-                            <span>FRUTAS</span>
-                            <span>LECHE</span>
-                            <span>NATURALES</span>
-                        </div>
-                        <a class="btn licuado-cta" href="llevar.php">Pide para llevar <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></a>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <div class="licuado-visual">
-                        <span class="licuado-line" aria-hidden="true"></span>
-                        <div id="licuadoCarousel" class="carousel slide licuado-carousel" data-bs-ride="carousel" data-bs-interval="4200" data-bs-touch="true" aria-label="Tipos de licuado">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img class="licuado-img" src="assets/img/licuado.png" alt="Licuado clásico con banana" loading="lazy">
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="licuado-img" src="assets/img/fresa.png" alt="Licuado de fresa" loading="lazy">
-                                </div>
-                                <div class="carousel-item">
-                                    <img class="licuado-img" src="assets/img/oreo.png" alt="Licuado de Oreo" loading="lazy">
-                                </div>
-                            </div>
-                            <div class="licuado-carousel-controls">
-                                <button class="licuado-carousel-control" type="button" data-bs-target="#licuadoCarousel" data-bs-slide="prev" aria-label="Ver licuado anterior">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-                                </button>
-                                <button class="licuado-carousel-control" type="button" data-bs-target="#licuadoCarousel" data-bs-slide="next" aria-label="Ver licuado siguiente">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                                </button>
-                            </div>
-                            <div class="carousel-indicators licuado-carousel-indicators">
-                                <button class="active" type="button" data-bs-target="#licuadoCarousel" data-bs-slide-to="0" aria-label="Ver licuado clásico" aria-current="true"></button>
-                                <button type="button" data-bs-target="#licuadoCarousel" data-bs-slide-to="1" aria-label="Ver licuado de fresa"></button>
-                                <button type="button" data-bs-target="#licuadoCarousel" data-bs-slide-to="2" aria-label="Ver licuado de Oreo"></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-<section class="trabaja-rinas" aria-labelledby="trabajaTitulo">
-    <div class="">
-        <div class="trabaja-panel">
-            <div class="row g-0">
-                <div class="col-12 col-lg-5">
-                    <div class="trabaja-intro">
-                        <div class="trabaja-intro-content">
-                            <span class="trabaja-eyebrow">ÚNETE AL EQUIPO</span>
-                            <h2 class="trabaja-title" id="trabajaTitulo">Trabaja con nosotros</h2>
-                            <p class="trabaja-sub mb-0">¿Te apasiona cocinar, servir o llevar nuestro sabor? Encuentra tu lugar en el equipo Rinas.</p>
-                            <div class="trabaja-areas" aria-label="Áreas del equipo">
-                                <span>Cocina</span>
-                                <span>Servicio</span>
-                                <span>Reparto</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-7">
-                    <div class="trabaja-list">
-                        <div class="trabaja-list-header">
-                            <span class="trabaja-list-eyebrow">ÁREAS DEL EQUIPO</span>
-                            <h3>Encuentra tu lugar</h3>
-                        </div>
-                        <div class="trabaja-roles">
-                            <a class="trabaja-role-card" target="_blank" rel="noopener" href="https://wa.me/50370000000?text=Hola%20quiero%20aplicar%20para%20Cocina%20en%20Rinas" aria-label="Postular a Cocina por WhatsApp">
-                                <span class="trabaja-role-icon" aria-hidden="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2H6z"/><path d="M8 15v4"/><path d="M12 15v4"/><path d="M16 15v4"/><path d="M12 5v4"/></svg>
-                                </span>
-                                <span class="trabaja-role-copy">
-                                    <span class="trabaja-role-name">Cocina</span>
-                                    <span class="trabaja-role-desc">Prepara pupusas con sazón casero y forma parte del corazón de Rinas.</span>
-                                </span>
-                                <span class="trabaja-role-arrow" aria-hidden="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                                </span>
-                            </a>
-                            <a class="trabaja-role-card" target="_blank" rel="noopener" href="https://wa.me/50370000000?text=Hola%20quiero%20aplicar%20para%20Servicio%20en%20Rinas" aria-label="Postular a Servicio por WhatsApp">
-                                <span class="trabaja-role-icon" aria-hidden="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M6 18a6 6 0 0 1 12 0"/><path d="M18 8a4 4 0 0 1 4 4v2h-4"/></svg>
-                                </span>
-                                <span class="trabaja-role-copy">
-                                    <span class="trabaja-role-name">Servicio</span>
-                                    <span class="trabaja-role-desc">Ofrece atención cercana y ágil para que cada visita se sienta como en casa.</span>
-                                </span>
-                                <span class="trabaja-role-arrow" aria-hidden="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                                </span>
-                            </a>
-                            <a class="trabaja-role-card" target="_blank" rel="noopener" href="https://wa.me/50370000000?text=Hola%20quiero%20aplicar%20para%20Reparto%20en%20Rinas" aria-label="Postular a Reparto por WhatsApp">
-                                <span class="trabaja-role-icon" aria-hidden="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17a2 2 0 1 0 4 0a2 2 0 0 0-4 0z"/><path d="M15 17a2 2 0 1 0 4 0a2 2 0 0 0-4 0z"/><path d="M7 17h10l2-6H6z"/><path d="M6 11V9h4"/><circle cx="7" cy="17" r="0.5" fill="currentColor"/><circle cx="17" cy="17" r="0.5" fill="currentColor"/></svg>
-                                </span>
-                                <span class="trabaja-role-copy">
-                                    <span class="trabaja-role-name">Reparto</span>
-                                    <span class="trabaja-role-desc">Lleva el sabor Rinas a domicilio con puntualidad y conocimiento de la ruta.</span>
-                                </span>
-                                <span class="trabaja-role-arrow" aria-hidden="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<script src="assets/js/carousel.js"></script>
-<script>
-(function(){
-  var wrap=document.getElementById('destacadoSizes');
-  var priceEl=document.getElementById('destacadoPrice');
-  if(!wrap||!priceEl) return;
-  var favBtn=document.querySelector('.btn-fav');
-  if(favBtn){
-    favBtn.addEventListener('click',function(){
-      favBtn.classList.toggle('is-fav');
-      var s=favBtn.querySelector('svg');
-      if(s) s.style.fill=favBtn.classList.contains('is-fav') ? 'currentColor' : 'none';
-    });
-  }
-  wrap.addEventListener('click',function(e){
-    var btn=e.target.closest('.size-pill');
-    if(!btn) return;
-    wrap.querySelectorAll('.size-pill').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    var p=btn.getAttribute('data-price');
-    priceEl.textContent='$'+p;
-    // feedback sutil en imagen
-    var img=document.querySelector('.destacado-img');
-    if(img){ img.style.transform='rotate(-8deg) scale(0.97)'; setTimeout(function(){ img.style.transform=''; },180); }
-  });
-})();
-</script>
+<!-- Versionado igual que el CSS: sin esto el navegador puede servir un
+     landing.js viejo desde cache y la pagina se queda sin animaciones. -->
+<script src="assets/js/landing.js?v=<?= LINK_CSS_VERSION ?>" defer></script>
