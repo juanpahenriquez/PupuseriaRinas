@@ -15,6 +15,9 @@ $paginacion = $paginacion ?? [
     'porPagina' => 12, 'pagina' => 1, 'etiqueta' => 'productos', 'placeholder' => 'Buscar…',
 ];
 
+// El contador de resultados se pinta abajo, en el pie del panel, junto a los
+// números de paginación (en vez de sobre la cuadrícula). Lo pinta _paginacion.php.
+$pieContador = true;
 $urlActualProd = basename($_SERVER['PHP_SELF']) . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
 $flash_ok = $_SESSION['flash_ok'] ?? null;
 $flash_err = $_SESSION['flash_err'] ?? null;

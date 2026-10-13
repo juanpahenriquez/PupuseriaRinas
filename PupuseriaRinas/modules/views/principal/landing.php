@@ -213,7 +213,7 @@ if ($pdoLanding) {
                     <li class="splide__slide"><img src="assets/img/pupa_chile.png" alt="" loading="lazy"></li>
                     <li class="splide__slide"><img src="assets/img/licuado.png" alt="" loading="lazy"></li>
                     <li class="splide__slide"><img src="assets/img/galeria_1_600.jpg?v=<?= LINK_CSS_VERSION ?>" alt="" loading="lazy"></li>
-                </ul>
+                    </ul>
             </div>
         </div>
     </div>

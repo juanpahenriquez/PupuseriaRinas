@@ -138,7 +138,6 @@ $backActual = basename($_SERVER['PHP_SELF'] ?? 'pedidos.php') . (!empty($_SERVER
                     <th>Folio</th>
                     <th>Cliente</th>
                     <th>Tipo</th>
-                    <th class="text-center">Detalle</th>
                     <th class="text-end">Total</th>
                     <th>Estado</th>
                     <th>Hora</th>
@@ -195,13 +194,6 @@ $backActual = basename($_SERVER['PHP_SELF'] ?? 'pedidos.php') . (!empty($_SERVER
                         <?php $esLlevar = $p['tipo'] === 'llevar'; ?>
                         <span class="pedidos-tipo"><i class="<?= $esLlevar ? 'fa-solid fa-bag-shopping' : 'fa-solid fa-store' ?>" aria-hidden="true"></i><?= $tipo['filtro'] ?></span>
                     </td>
-                    <td class="text-center">
-                        <button type="button" class="pedidos-ojo" data-detalle="<?= htmlspecialchars($detalleJson, ENT_QUOTES) ?>"
-                                title="Ver detalle del pedido <?= htmlspecialchars($folio) ?>"
-                                aria-label="Ver detalle del pedido <?= htmlspecialchars($folio) ?>">
-                            <i class="fa-regular fa-eye" aria-hidden="true"></i>
-                        </button>
-                    </td>
                     <td class="pedidos-total">$<?= number_format((float) $p['total'], 2) ?></td>
                     <td>
                         <form method="post" class="d-inline">
@@ -218,13 +210,25 @@ $backActual = basename($_SERVER['PHP_SELF'] ?? 'pedidos.php') . (!empty($_SERVER
                     </td>
                     <td><span class="pedidos-hora" title="<?= htmlspecialchars(date('d/m/Y H:i', strtotime($p['creado']))) ?>"><i class="fa-regular fa-clock" aria-hidden="true"></i><?= hace($p['creado']) ?></span></td>
                     <td class="text-end">
-                        <form method="post" class="d-inline" onsubmit="return confirm('¿Eliminar el pedido <?= htmlspecialchars(addslashes($folio)) ?>?')">
-                            <?= csrf_input() ?>
-                            <input type="hidden" name="action" value="eliminar">
-                            <input type="hidden" name="id" value="<?= $pId ?>">
-                            <input type="hidden" name="back" value="<?= htmlspecialchars($backActual) ?>">
-                            <button type="submit" class="btn btn-sm pedidos-borrar" aria-label="Eliminar pedido <?= htmlspecialchars($folio) ?>"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button>
-                        </form>
+                        <div class="d-flex justify-content-end gap-1">
+                            <button type="button" class="btn btn-sm pedidos-ojo" data-detalle="<?= htmlspecialchars($detalleJson, ENT_QUOTES) ?>"
+                                    title="Ver detalle del pedido <?= htmlspecialchars($folio) ?>"
+                                    aria-label="Ver detalle del pedido <?= htmlspecialchars($folio) ?>">
+                                <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm pedidos-print" data-ticket="<?= htmlspecialchars($detalleJson, ENT_QUOTES) ?>"
+                                    title="Imprimir ticket del pedido <?= htmlspecialchars($folio) ?>"
+                                    aria-label="Imprimir ticket del pedido <?= htmlspecialchars($folio) ?>">
+                                <i class="fa-solid fa-print" aria-hidden="true"></i>
+                            </button>
+                            <form method="post" class="d-inline" onsubmit="return confirm('¿Eliminar el pedido <?= htmlspecialchars(addslashes($folio)) ?>?')">
+                                <?= csrf_input() ?>
+                                <input type="hidden" name="action" value="eliminar">
+                                <input type="hidden" name="id" value="<?= $pId ?>">
+                                <input type="hidden" name="back" value="<?= htmlspecialchars($backActual) ?>">
+                                <button type="submit" class="btn btn-sm pedidos-borrar" aria-label="Eliminar pedido <?= htmlspecialchars($folio) ?>"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -383,6 +387,82 @@ $backActual = basename($_SERVER['PHP_SELF'] ?? 'pedidos.php') . (!empty($_SERVER
 
       $('mdTotal').textContent = money(d.total);
       modal.show();
+    });
+  });
+})();
+</script>
+
+<script>
+(function(){
+  /* Impresión del ticket: abre una ventana con el formato de ticket */
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const money = n => '$' + (Number(n) || 0).toFixed(2);
+
+  document.querySelectorAll('.pedidos-print').forEach(btn => {
+    btn.addEventListener('click', () => {
+      let d;
+      try { d = JSON.parse(btn.getAttribute('data-ticket')); } catch (e) { return; }
+      if (!d) return;
+
+      const lineas = Array.isArray(d.lineas) ? d.lineas : [];
+      const filas = lineas.length
+        ? lineas.map(l => {
+            const importe = (l.precio == null) ? null : (Number(l.precio) * (Number(l.cantidad) || 1));
+            return '<tr><td style="text-align:center">' + (Number(l.cantidad) || 1) + '×</td>'
+                 + '<td>' + esc(l.nombre) + '</td>'
+                 + '<td style="text-align:right">' + (importe == null ? '—' : money(importe)) + '</td></tr>';
+          }).join('')
+        : '<tr><td colspan="3" style="text-align:center;color:#999">Sin productos registrados</td></tr>';
+
+      const html = `<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ticket ${esc(d.folio || '')}</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Courier New', monospace; font-size: 13px; padding: 20px; max-width: 300px; margin: 0 auto; }
+  h1 { font-size: 16px; text-align: center; margin-bottom: 2px; }
+  .sub { text-align: center; font-size: 11px; margin-bottom: 12px; }
+  hr { border: none; border-top: 1px dashed #000; margin: 8px 0; }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { padding: 2px 4px; font-size: 12px; }
+  th { text-align: left; border-bottom: 1px solid #000; }
+  .total { font-weight: bold; font-size: 15px; text-align: right; margin-top: 6px; }
+  .info { margin-bottom: 4px; }
+  .info span { font-weight: bold; }
+  @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+  <h1>PUPUSERIA RINAS</h1>
+  <p class="sub">Ticket de pedido</p>
+  <hr>
+  <p class="info"><span>Folio:</span> ${esc(d.folio || '')}</p>
+  <p class="info"><span>Cliente:</span> ${esc(d.cliente || '—')}</p>
+  <p class="info"><span>Tel:</span> ${esc(d.telefono || '—')}</p>
+  <p class="info"><span>Entrega:</span> ${esc(d.tipoLabel || 'Recoger en tienda')}</p>
+  <p class="info"><span>Fecha:</span> ${esc(d.fecha || '—')}</p>
+  ${d.notas ? `<p class="info"><span>Notas:</span> ${esc(d.notas)}</p>` : ''}
+  <hr>
+  <table>
+    <thead><tr><th>Cant</th><th>Producto</th><th style="text-align:right">Importe</th></tr></thead>
+    <tbody>${filas}</tbody>
+  </table>
+  <hr>
+  <p class="total">Total: ${money(d.total)}</p>
+  <hr>
+  <p class="sub">Gracias por su compra</p>
+  <script>window.onload = function(){ window.print(); }<\/script>
+</body>
+</html>`;
+
+      const w = window.open('', '_blank', 'width=320,height=500');
+      if (w) {
+        w.document.write(html);
+        w.document.close();
+      }
     });
   });
 })();

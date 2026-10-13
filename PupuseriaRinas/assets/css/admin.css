@@ -630,6 +630,9 @@
 .admin-logo-preview {
     width: 64px; height: 64px; border-radius: 50%; border: 1px dashed #000;
     display: flex; align-items: center; justify-content: center; background-color: #FFF6D3;
+    /* Sin esto, un logo cuadrado (png/jpg) se salía del círculo y rompía la
+       forma redonda del preview: el border-radius no recorta a los hijos. */
+    overflow: hidden; padding: 4px; flex: 0 0 auto;
 }
 
 .progress-bar--naranja { background-color: var(--rinas-naranja) !important; }
@@ -815,8 +818,9 @@ html.admin-menu-cerrado .admin-main {
 }
 
 /* ============================================================
-   Dropzone — carga de imagen de productos (crear / editar)
-   Solo estilo: el JS vive en modules/views/admin/productos.php
+   Dropzone — zonas de imagen (productos crear/editar y logo de config)
+   Solo estilo: el JS vive en modules/views/admin/productos.php y en
+   modules/views/admin/config.php
    ============================================================ */
 .dropzone-rinas {
     border: 2px dashed #000;
@@ -825,6 +829,11 @@ html.admin-menu-cerrado .admin-main {
     padding: 0.75rem;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
+    /* Centra el mensaje vacío; al elegir un archivo el mensaje se oculta
+       (.dz-started) y el preview ocupa todo el ancho con flex:1 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .dropzone-rinas:hover,
@@ -840,6 +849,14 @@ html.admin-menu-cerrado .admin-main {
     font-weight: 700;
 }
 
+/* Dropzone oculta el mensaje cuando ya hay un archivo en la zona
+   (añade la clase dz-started al contenedor). En el CSS oficial eso lo hace
+   .dropzone.dz-started .dz-message, pero estas zonas no llevan la clase
+   .dropzone, así que hay que declararlo aquí. */
+.dropzone-rinas.dz-started .dz-message {
+    display: none;
+}
+
 .dropzone-rinas .dz-message .dz-icon {
     display: block;
     font-size: 1.6rem;
@@ -851,6 +868,24 @@ html.admin-menu-cerrado .admin-main {
 /* La miniatura se centra y se recorta limpio */
 .dropzone-rinas .dz-preview {
     margin: 0;
+    /* Ancla para el botón "Quitar" (position:absolute) y para que el preview
+       ocupe todo el ancho de la zona dentro del flex del contenedor */
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Elementos internos que Dropzone inyecta en el preview. En el CSS oficial
+   los oculta/posiciona bajo ".dropzone ...", y como estas zonas no tienen esa
+   clase, sin estas reglas se veían encimados: la barra de progreso, los svg
+   de check/cross (54px) y el mensaje de error. El envío lo hace el submit del
+   formulario, así que ninguno de los tres debe aparecer. */
+.dropzone-rinas .dz-preview .dz-progress,
+.dropzone-rinas .dz-preview .dz-success-mark,
+.dropzone-rinas .dz-preview .dz-error-mark,
+.dropzone-rinas .dz-preview .dz-error-message {
+    display: none;
 }
 
 .dropzone-rinas .dz-preview .dz-image {
@@ -901,6 +936,10 @@ html.admin-menu-cerrado .admin-main {
 
 /* Quitar archivo: cuadrado y con el estilo del panel */
 .dropzone-rinas .dz-preview .dz-remove {
+    position: absolute;
+    display: block;
+    text-decoration: none;
+    z-index: 3;
     font-size: 15px;
     text-align: center;
     font-weight: 700;
@@ -925,6 +964,35 @@ html.admin-menu-cerrado .admin-main {
 .dropzone-rinas .dz-preview .dz-error-mark {
     top: 6px;
     left: 6px;
+}
+
+/* Variante compacta: logo de configuración (junto al preview circular) */
+.dropzone-rinas--logo {
+    flex: 1 1 220px;
+    min-height: 104px;
+}
+
+.dropzone-rinas--logo .dz-message {
+    font-size: 0.74rem;
+    line-height: 1.35;
+}
+
+.dropzone-rinas--logo .dz-message .dz-icon {
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+}
+
+/* La miniatura del logo elegido es pequeña: es un logo, no una foto */
+.dropzone-rinas--logo .dz-preview .dz-image {
+    height: 64px;
+}
+
+/* El preview circular de configuración se rellena por JS al elegir archivo */
+.admin-logo-preview img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 /* ============================================================
@@ -1251,6 +1319,9 @@ body.admin-pedidos-body .pedidos-panel .table-responsive {
 
 .pedidos-borrar { color: #c0392b; font-size: 0.85rem; }
 .pedidos-borrar:hover, .pedidos-borrar:focus-visible { background-color: #c0392b; color: #fff; }
+
+.pedidos-print { color: var(--rinas-naranja); font-size: 0.85rem; }
+.pedidos-print:hover, .pedidos-print:focus-visible { background-color: var(--rinas-naranja); color: #fff; }
 
 .pedidos-total {
     font-weight: 800;

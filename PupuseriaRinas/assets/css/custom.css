@@ -35,11 +35,46 @@ h1, h2, h3, h4, h5, h6,
     letter-spacing: 0.3px;
 }
 
+/* ============================================================================
+   Cabecera (compartida por landing, menú, ubicación y nosotros)
+   ----------------------------------------------------------------------------
+   Transparente sobre el hero oscuro y azul marino al scrollear: el mismo
+   lenguaje en las cuatro páginas, así el sitio se lee como una sola pieza.
+   ========================================================================== */
 .header-rinas {
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Navbar transparente sobre el video */
+/* Enlace de salto: solo aparece al tabular, para teclado y lectores de voz */
+.skip-rinas {
+    position: absolute;
+    top: -4rem;
+    left: 1rem;
+    z-index: 3000;
+    padding: 0.6rem 1.1rem;
+    border-radius: 0 0 12px 12px;
+    background-color: var(--rinas-naranja);
+    color: var(--rinas-azul);
+    font-family: var(--font-titulos);
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: top 0.2s ease;
+}
+
+.skip-rinas:focus-visible {
+    top: 0;
+    outline: 3px solid #fff;
+    outline-offset: -6px;
+}
+
+main:focus {
+    outline: none;
+}
+
+/* Navbar transparente sobre el hero */
 .navbar-rinas {
     background-color: transparent;
     border-bottom: 1px solid transparent;
@@ -48,28 +83,60 @@ h1, h2, h3, h4, h5, h6,
     transition: background-color 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
 }
 
+/* El logo es un JPG de fondo crema: el aro naranja lo convierte en el sello
+   de la marca en lugar de un cuadrado pegado en la esquina. */
 .logo-rinas {
     object-fit: contain;
     width: 70px;
     height: 70px;
-    transition: width 0.3s ease, height 0.3s ease;
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 2px rgba(245, 158, 11, 0.45),
+        0 8px 22px rgba(11, 11, 69, 0.35);
+    transition: width 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Enlaces en versales y con aire, como los rótulos del landing */
 .navbar-rinas .nav-link {
+    position: relative;
     color: #fff;
-    font-weight: 700;
-    font-size: 1rem;
+    font-family: var(--font-titulos);
+    font-weight: 800;
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
     transition: color 0.3s ease;
 }
 
-.navbar-rinas .nav-link:hover {
+/* Filete naranja que crece desde la izquierda: micro-interacción discreta */
+.navbar-rinas .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2px;
+    height: 2px;
+    background-color: var(--rinas-naranja);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.3s ease;
+}
+
+.navbar-rinas .nav-link:hover,
+.navbar-rinas .nav-link:focus-visible,
+.navbar-rinas .nav-link[aria-current="page"] {
     color: var(--rinas-naranja);
-    text-decoration: underline;
-    text-underline-offset: 4px;
+}
+
+.navbar-rinas .nav-link:hover::after,
+.navbar-rinas .nav-link:focus-visible::after,
+.navbar-rinas .nav-link[aria-current="page"]::after {
+    transform: scaleX(1);
 }
 
 .navbar-rinas .navbar-toggler {
-    border-color: #fff;
+    border-color: rgba(255, 255, 255, 0.75);
     transition: border-color 0.3s ease;
 }
 
@@ -78,34 +145,48 @@ h1, h2, h3, h4, h5, h6,
     transition: filter 0.3s ease;
 }
 
-/* Al scrollear: navbar solido y delgado */
+/* Al scrollear: cabecera sólida azul marino y delgada */
 .header-rinas.scrolled .navbar-rinas {
-    background-color: var(--rinas-crema);
-    border-bottom: 1px solid rgba(11, 11, 69, 0.12);
-    box-shadow: 0 4px 16px rgba(11, 11, 69, 0.12);
+    background-color: var(--rinas-azul);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 18px rgba(11, 11, 69, 0.28);
     padding-top: 0.15rem;
     padding-bottom: 0.15rem;
 }
 
 .header-rinas.scrolled .logo-rinas {
-    width: 44px;
-    height: 44px;
-}
-
-.header-rinas.scrolled .navbar-rinas .nav-link {
-    color: orange;
-}
-
-.header-rinas.scrolled .navbar-rinas .nav-link:hover {
-    color: orange;
+    width: 46px;
+    height: 46px;
 }
 
 .header-rinas.scrolled .navbar-rinas .navbar-toggler {
-    border-color: orange;
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
-.header-rinas.scrolled .navbar-rinas .navbar-toggler-icon {
-    filter: none;
+/* Panel del menú en móvil: placa sólida, siempre legible sobre el contenido */
+@media (max-width: 991.98px) {
+    .header-rinas:not(.scrolled) .navbar-rinas .navbar-collapse.show,
+    .header-rinas:not(.scrolled) .navbar-rinas .navbar-collapse.collapsing {
+        background-color: var(--rinas-crema);
+        border-radius: 14px;
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 14px 30px rgba(11, 11, 69, 0.28);
+    }
+
+    .header-rinas:not(.scrolled) .navbar-rinas .navbar-collapse.show .nav-link,
+    .header-rinas:not(.scrolled) .navbar-rinas .navbar-collapse.collapsing .nav-link {
+        color: var(--rinas-azul);
+    }
+
+    .header-rinas.scrolled .navbar-rinas .navbar-collapse.show,
+    .header-rinas.scrolled .navbar-rinas .navbar-collapse.collapsing {
+        background-color: var(--rinas-azul);
+        border-radius: 14px;
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 14px 30px rgba(11, 11, 69, 0.35);
+    }
 }
 
 .btn-ver-menu {
@@ -125,56 +206,9 @@ h1, h2, h3, h4, h5, h6,
     color: #fff;
 }
 
-/* Franja azul en diagonal (solo desktop y con navbar solido, links siguen centrados) */
-@media (min-width: 992px) {
-    .header-rinas.scrolled .navbar-rinas {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .header-rinas.scrolled .navbar-rinas::before,
-    .header-rinas.scrolled .navbar-rinas::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 0;
-    }
-
-    .header-rinas.scrolled .navbar-rinas::before {
-        width: 246px;
-        background: var(--rinas-naranja);
-        clip-path: polygon(56px 0, 100% 0, 100% 100%, 0 100%);
-    }
-
-    .header-rinas.scrolled .navbar-rinas::after {
-        width: 230px;
-        background: var(--rinas-azul);
-        clip-path: polygon(56px 0, 100% 0, 100% 100%, 0 100%);
-    }
-
-    .header-rinas.scrolled .navbar-rinas .container {
-        position: relative;
-        z-index: 1;
-    }
-}
-
-/* Menu movil legible sobre el video */
-@media (max-width: 991.98px) {
-    .header-rinas:not(.scrolled) .navbar-rinas .navbar-collapse.show,
-    .header-rinas:not(.scrolled) .navbar-rinas .navbar-collapse.collapsing {
-        background-color: var(--rinas-crema);
-        border-radius: 12px;
-        padding: 0.75rem 1rem;
-        margin-top: 0.5rem;
-    }
-
-    .header-rinas:not(.scrolled) .navbar-rinas .navbar-collapse.show .nav-link,
-    .header-rinas:not(.scrolled) .navbar-rinas .navbar-collapse.collapsing .nav-link {
-        color: var(--rinas-azul);
-    }
-}
+/* Las franjas diagonales que había aquí (solo en escritorio y con la cabecera
+   sólida) se quitaron: pertenecían al diseño anterior y chocaban con el
+   lenguaje plano de la cabecera actual, que es azul marino sólido. */
 
 .footer-rinas {
     background-color: var(--rinas-azul);
@@ -1935,6 +1969,10 @@ body.page-nosotros {
     background-color: var(--rinas-crema);
 }
 
+body.pagina-ubicacion {
+    background-color: var(--rinas-crema);
+}
+
 /* El header usa el estilo global (transparente sobre el hero y solido al
    scrollear), igual que Ubicación y Menú. Antes se forzaba aquí un header
    crema fijo porque la pagina aun no tenia hero con foto. */
@@ -2362,19 +2400,96 @@ body.page-nosotros {
     }
 }
 
-/* ---- Galeria ---- */
+/* ============================================================================
+   Galeria (nosotros) ·- rediseno editorial, mismo lenguaje que el landing
+   ----------------------------------------------------------------------------
+   Bloque azul marino a sangre, filete naranja arriba y reticula de fotos con
+   una pieza grande que manda. Tipografia en versales, un solo acento naranja
+   y pie de foto que aparece al pasar el cursor (siempre visible en la grande).
+   Las fotos se amplian en el lightbox de mas abajo.
+   ========================================================================== */
 .galeria-rinas {
+    position: relative;
+    padding: clamp(3.25rem, 7vw, 5.5rem) 0 clamp(3.5rem, 8vw, 6rem);
     background:
-        radial-gradient(500px 240px at 90% 110%, rgba(245, 158, 11, 0.1), transparent 70%),
-        var(--rinas-crema);
-    padding-bottom: 4rem;
+        radial-gradient(760px 340px at 90% -8%, rgba(245, 158, 11, 0.18), transparent 70%),
+        radial-gradient(560px 300px at 4% 108%, rgba(245, 158, 11, 0.12), transparent 70%),
+        var(--rinas-azul);
+    color: #fff;
+    overflow: hidden;
+}
+
+/* Filete naranja que separa la galeria del bloque claro de misión y visión */
+.galeria-filete {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--rinas-naranja) 0%, rgba(245, 158, 11, 0.15) 75%);
 }
 
 .galeria-head {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 1.25rem;
-    margin-bottom: 1.35rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.galeria-head-copy {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.galeria-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+}
+
+.galeria-eyebrow::before {
+    content: "";
+    width: 2.25rem;
+    height: 2px;
+    background-color: var(--rinas-naranja);
+    flex: 0 0 auto;
+}
+
+.galeria-titulo {
+    font-family: var(--font-titulos);
+    font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 0.9rem;
+}
+
+.galeria-lead {
+    max-width: 54ch;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+    font-weight: 600;
+    line-height: 1.65;
+}
+
+.galeria-head-meta {
+    flex: 0 0 auto;
+    margin: 0 0 0.5rem;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: var(--font-titulos);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.galeria-head-meta b {
+    color: var(--rinas-naranja);
+    font-size: 1.05rem;
 }
 
 .galeria-head-linea {
@@ -2383,77 +2498,262 @@ body.page-nosotros {
     background: linear-gradient(90deg, rgba(11, 11, 69, 0.25), transparent);
 }
 
+/* Sobre el azul de la galería la línea es clara y corta: separa el titular
+   del contador sin cruzarse con el texto. */
+.galeria-rinas .galeria-head-linea {
+    flex: 0 1 6rem;
+    width: 6rem;
+    margin-bottom: 1.1rem;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0));
+}
+
+/* ---- Reticula: 4 columnas, la foto grande ocupa 2x2 ---- */
+.galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: clamp(9rem, 12.5vw, 13rem);
+    gap: clamp(0.7rem, 1.3vw, 1.15rem);
+}
+
+.galeria-card--xl {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.galeria-card--ancha {
+    grid-column: span 2;
+}
+
+/* Entrada escalonada de las fotos, el mismo recurso de movimiento que usa el
+   landing. Solo se aplica con JavaScript (la clase .js la pone el script del
+   <head>): sin JS las fotos están visibles desde el primer momento. */
+.js .galeria-card {
+    opacity: 0;
+    transform: translate3d(0, var(--galeria-y, 24px), 0);
+    transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+        transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+    transition-delay: var(--galeria-delay, 0ms);
+}
+
+.js .galeria-card.is-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    /* El escalonado es solo para la entrada: sin esto el hover heredaría el
+       retardo de cada foto y parecería que reacciona con pereza. */
+    transition-delay: 0ms;
+}
+
+/* El hover se mantiene tras la entrada (va después, así que gana el empate) */
+.js .galeria-card.is-in:hover,
+.js .galeria-card.is-in:focus-visible {
+    transform: translate3d(0, -4px, 0);
+}
+
 .galeria-card {
     position: relative;
     margin: 0;
-    background-color: #fff;
-    border: 1.5px solid var(--rinas-naranja);
-    border-radius: 16px;
     overflow: hidden;
-    aspect-ratio: 3 / 4;
-    box-shadow: 0 12px 30px rgba(11, 11, 69, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(4, 4, 30, 0.35);
+    cursor: zoom-in;
+    transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
-.galeria-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--rinas-naranja-hover);
-    box-shadow: 0 22px 44px rgba(11, 11, 69, 0.16);
+.galeria-card:hover,
+.galeria-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(245, 158, 11, 0.7);
+    box-shadow: 0 26px 58px rgba(4, 4, 30, 0.45);
+}
+
+.galeria-card:focus-visible {
+    outline: 3px solid var(--rinas-naranja);
+    outline-offset: 3px;
 }
 
 .galeria-card img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    transition: transform 0.5s ease;
-}
-
-.galeria-card-producto img {
-    object-fit: contain;
-    object-position: center;
-    padding: 1rem;
-    background: linear-gradient(180deg, #fff 0%, var(--rinas-crema) 100%);
+    transition: transform 0.7s ease;
 }
 
 .galeria-card:hover img {
-    transform: scale(1.06);
+    transform: scale(1.05);
 }
 
+/* Los PNG de producto son recortes con transparencia: se posan sobre una base
+   crema en vez de estirarse a la caja, que los ampliaba y los veía borrosos.
+   El padding inferior es mayor para que la foto no se pelee con el pie. */
+.galeria-card--producto img {
+    object-fit: contain;
+    padding: clamp(1rem, 1.6vw, 1.75rem) clamp(1rem, 1.6vw, 1.75rem) clamp(2.4rem, 3.2vw, 3.25rem);
+    background: linear-gradient(180deg, #ffffff 0%, var(--rinas-crema) 100%);
+}
+
+/* La foto grande respira sola, como el banner del landing (muy lento) */
+.galeria-card--xl img {
+    animation: galeria-aliento 16s ease-in-out infinite alternate;
+}
+
+@keyframes galeria-aliento {
+    from {
+        transform: scale(1.01);
+    }
+
+    to {
+        transform: scale(1.06);
+    }
+}
+
+/* Velo inferior: da apoyo al pie de foto sin tapar la foto */
 .galeria-card::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 45%, rgba(11, 11, 69, 0.72) 100%);
+    background: linear-gradient(180deg, rgba(11, 11, 69, 0) 45%, rgba(11, 11, 69, 0.78) 100%);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.35s ease;
     pointer-events: none;
 }
 
-.galeria-card:hover::after {
+.galeria-card:hover::after,
+.galeria-card:focus-visible::after,
+.galeria-card--xl::after {
     opacity: 1;
 }
 
-.galeria-card figcaption {
+.galeria-card-pie {
     position: absolute;
-    left: 1rem;
-    right: 1rem;
-    bottom: 0.85rem;
-    z-index: 1;
-    color: #fff;
-    font-size: 0.92rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    transform: translateY(10px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: clamp(0.85rem, 1.4vw, 1.15rem);
     opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(10px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-.galeria-card:hover figcaption {
-    transform: translateY(0);
+.galeria-card:hover .galeria-card-pie,
+.galeria-card:focus-visible .galeria-card-pie,
+.galeria-card--xl .galeria-card-pie {
     opacity: 1;
+    transform: translateY(0);
+}
+
+.galeria-card-num {
+    color: var(--rinas-naranja);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+.galeria-card-titulo {
+    color: #fff;
+    font-family: var(--font-titulos);
+    font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 14px rgba(11, 11, 69, 0.6);
+}
+
+/* Distintivo de ampliar: pista visual de que la foto se abre */
+.galeria-card-zoom {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.94);
+    color: var(--rinas-azul);
+    box-shadow: 0 8px 20px rgba(4, 4, 30, 0.35);
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.galeria-card-zoom svg {
+    width: 17px;
+    height: 17px;
+}
+
+.galeria-card:hover .galeria-card-zoom,
+.galeria-card:focus-visible .galeria-card-zoom {
+    opacity: 1;
+    transform: scale(1);
+}
+
+@media (max-width: 991.98px) {
+    .galeria-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: clamp(8.5rem, 25vw, 11.5rem);
+    }
+
+    .galeria-head-linea {
+        display: none;
+    }
+}
+
+/* En pantallas táctiles no hay hover: sin esto el pie de foto jamás aparecería
+   en móvil y tableta, que es donde más se mira la galería. */
+@media (hover: none) {
+
+    .galeria-card-pie,
+    .galeria-card::after {
+        opacity: 1;
+        transform: none;
+    }
+
+    .galeria-card-zoom {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .galeria-grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: clamp(9.5rem, 40vw, 12rem);
+    }
+
+    .galeria-card--ancha {
+        grid-column: span 1;
+    }
+
+    .galeria-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .galeria-head-meta {
+        margin-bottom: 0;
+    }
+
+    /* En movil no hay hover: el pie de foto se ve siempre */
+    .galeria-card-pie,
+    .galeria-card::after {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2464,12 +2764,21 @@ body.page-nosotros {
     .mv-icon,
     .galeria-card,
     .galeria-card img,
-    .galeria-card figcaption,
-    .galeria-card::after {
+    .galeria-card-pie,
+    .galeria-card::after,
+    .galeria-card-zoom {
         transition: none !important;
     }
 
-    .galeria-card:hover img {
+    .galeria-card:hover img,
+    .galeria-card--xl img {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    /* Con movimiento reducido la galería entra ya visible, sin escalonado */
+    .js .galeria-card {
+        opacity: 1;
         transform: none;
     }
 }
@@ -2615,6 +2924,24 @@ body.page-nosotros {
     display: none;
 }
 
+/* La foto entra con un fundido corto: sin el, el cambio de imagen pega un
+   salto seco dentro del overlay. */
+.lightbox-rinas:not([hidden]) .lightbox-figura img {
+    animation: lightbox-entrada 0.35s ease;
+}
+
+@keyframes lightbox-entrada {
+    from {
+        opacity: 0;
+        transform: scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .lightbox-figura {
     margin: 0;
     max-width: min(1000px, 88vw);
@@ -2631,10 +2958,23 @@ body.page-nosotros {
 }
 
 .lightbox-figura figcaption {
-    margin-top: 0.8rem;
+    margin-top: 0.85rem;
     color: #fff;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-family: var(--font-titulos);
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+/* Contador 01 / 08 bajo el pie: mismo recurso que la barra del landing */
+.lightbox-contador {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--rinas-naranja);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
 }
 
 .lightbox-cerrar,
@@ -2654,7 +2994,9 @@ body.page-nosotros {
 }
 
 .lightbox-cerrar:hover,
-.lightbox-flecha:hover {
+.lightbox-flecha:hover,
+.lightbox-cerrar:focus-visible,
+.lightbox-flecha:focus-visible {
     background-color: var(--rinas-naranja);
     color: #fff;
     transform: scale(1.06);
@@ -2674,9 +3016,12 @@ body.page-nosotros {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .lightbox-cerrar,
-    .lightbox-flecha {
+    .lightbox-flecha,
+    .lightbox-rinas:not([hidden]) .lightbox-figura img {
         transition: none !important;
+        animation: none !important;
     }
 }
 

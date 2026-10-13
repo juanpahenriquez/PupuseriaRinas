@@ -114,8 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 flash('err', 'No se pudo guardar el pedido: ' . $e->getMessage());
             }
             if ($nuevoId > 0) {
-                flash('ok', 'Pedido #' . str_pad((string) $nuevoId, 4, '0', STR_PAD_LEFT)
-                    . ' cobrado · $' . number_format($total, 2));
+                flash('toast', json_encode([
+                    'icon' => 'success',
+                    'title' => 'Pedido cobrado',
+                    'text' => 'Pedido #' . str_pad((string) $nuevoId, 4, '0', STR_PAD_LEFT) . ' · $' . number_format($total, 2)
+                ], JSON_UNESCAPED_UNICODE));
+                // Recuerda el pedido cobrado para ofrecer imprimir su ticket
+                // en la siguiente carga (se lee y limpia con leer_flash).
+                flash('imprimir', (string) $nuevoId);
             }
             header('Location: pos.php');
             exit;
@@ -161,6 +167,31 @@ foreach ($abiertos as $a) {
     }
 }
 
+/* Pedidos del día: todos los creados hoy (incluye entregados) con sus items
+   para el modal de Pedidos y la impresión de tickets. */
+$pedidosHoy = $pdo->query("SELECT p.id, p.folio, p.tipo, p.cliente, p.telefono, p.notas,
+                                  p.total, p.estado, p.creado,
+                                  COALESCE(GROUP_CONCAT(CONCAT(i.cantidad,'× ',i.nombre) SEPARATOR ', '),'—') AS detalle
+                           FROM pedidos p LEFT JOIN pedido_items i ON i.pedido_id = p.id
+                           WHERE DATE(p.creado) = CURDATE()
+                           GROUP BY p.id
+                           ORDER BY p.id DESC")->fetchAll();
+
+// Items reales de cada pedido del día (para impresión de tickets)
+$idsHoy = array_map('intval', array_column($pedidosHoy, 'id'));
+if ($idsHoy) {
+    $marcas = implode(',', array_fill(0, count($idsHoy), '?'));
+    $iStmt = $pdo->prepare("SELECT pedido_id, nombre, cantidad, precio FROM pedido_items WHERE pedido_id IN ({$marcas}) ORDER BY id");
+    $iStmt->execute($idsHoy);
+    $itemsPorPedido = [];
+    foreach ($iStmt->fetchAll() as $it) {
+        $itemsPorPedido[(int) $it['pedido_id']][] = $it;
+    }
+    foreach ($pedidosHoy as $k => $ph) {
+        $pedidosHoy[$k]['items'] = $itemsPorPedido[(int) $ph['id']] ?? [];
+    }
+}
+
 // Solo productos activos: los agotados no se venden
 $productos = $pdo->query("SELECT id, nombre, descripcion, precio, categoria, imagen
                           FROM productos WHERE estado = 'Activo'
@@ -172,6 +203,34 @@ foreach ($productos as $p) {
 }
 $categorias = array_keys($categorias);
 sort($categorias);
+
+/* — Ticket a imprimir: el pedido recién cobrado (si lo hay) —
+   leer_flash('imprimir') consume el id y lo limpia, así que el modal de
+   impresión solo aparece una vez, justo después de cobrar. */
+$cfgTicket = [];
+foreach ($pdo->query("SELECT clave, valor FROM configuracion WHERE clave IN ('direccion','telefono')") as $r) {
+    $cfgTicket[$r['clave']] = (string) $r['valor'];
+}
+
+$ticket = null;
+$imprimirId = (int) leer_flash('imprimir');
+if ($imprimirId > 0) {
+    $tStmt = $pdo->prepare("SELECT id, folio, tipo, cliente, telefono, notas, total, creado
+                           FROM pedidos WHERE id = ?");
+    $tStmt->execute([$imprimirId]);
+    $pedidoTicket = $tStmt->fetch();
+    if ($pedidoTicket) {
+        $iTStmt = $pdo->prepare("SELECT nombre, cantidad, precio FROM pedido_items
+                                 WHERE pedido_id = ? ORDER BY id");
+        $iTStmt->execute([$imprimirId]);
+        $pedidoTicket['items'] = $iTStmt->fetchAll();
+        $ticket = $pedidoTicket;
+    }
+}
+
+// Toast de cobrado (se lee y limpia)
+$flash_toast = $_SESSION['flash_toast'] ?? null;
+unset($_SESSION['flash_toast']);
 
 
 ?><!doctype html>

@@ -4,7 +4,10 @@ require_once __DIR__ . '/../config/auth.php';
 requerir_login();
 
 $pdo = db();
-$flash_ok = leer_flash('ok');
+// El éxito viaja como toast (SweetAlert), no como alerta dentro de la página:
+// mismo criterio que en productos y pedidos. Los errores siguen llegando como
+// flash 'err' porque pueden ser varios y necesitan más lectura.
+$flash_toast = json_decode((string) leer_flash('toast'), true) ?: null;
 $flash_err = leer_flash('err');
 
 $claves = ['direccion', 'maps_query', 'telefono', 'whatsapp', 'logo'];
@@ -38,6 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'guard
                 $name = 'logo_config.' . ($ext === 'jpeg' ? 'jpg' : $ext);
                 if (move_uploaded_file($f['tmp_name'], $dir . '/' . $name)) {
                     $logoPath = 'assets/img/' . $name;
+                    // Se borran los logos anteriores: si cambiaste de formato
+                    // (jpg -> png) el archivo viejo se quedaba ocupando disco y
+                    // apuntando a una imagen que ya no usas.
+                    foreach ((array) glob($dir . '/logo_config.*') as $previo) {
+                        if (is_file($previo) && basename($previo) !== $name) {
+                            @unlink($previo);
+                        }
+                    }
                 } else {
                     $errors[] = 'No se pudo guardar el logo';
                 }
@@ -54,11 +65,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'guard
         if ($logoPath !== null) {
             $up->execute(['logo', $logoPath]);
         }
-        flash('ok', 'Configuración guardada');
+        flash('toast', json_encode(['icon' => 'success', 'title' => 'Configuración guardada'], JSON_UNESCAPED_UNICODE));
         header('Location: config.php');
         exit;
     }
     $flash_err = implode(' · ', $errors);
+}
+
+// Guardado automático de la ubicación (botón "Estoy aquí" en el preview del
+// mapa): recibe las coordenadas del navegador, las valida y las persiste en
+// maps_query sin recargar la página. Devuelve JSON.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'guardar_ubicacion') {
+    verificar_csrf();
+    header('Content-Type: application/json; charset=utf-8');
+    $coords = trim($_POST['maps_query'] ?? '');
+    if (!preg_match('/^-?\d{1,3}(?:\.\d+)?\s*,\s*-?\d{1,3}(?:\.\d+)?$/', $coords)) {
+        http_response_code(422);
+        echo json_encode(['ok' => false, 'error' => 'Coordenadas inválidas']);
+        exit;
+    }
+    $upUbic = $pdo->prepare("INSERT INTO configuracion (clave, valor) VALUES (?,?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)");
+    $upUbic->execute(['maps_query', $coords]);
+    echo json_encode(['ok' => true, 'maps_query' => $coords]);
+    exit;
 }
 
 $config = array_fill_keys($claves, '');

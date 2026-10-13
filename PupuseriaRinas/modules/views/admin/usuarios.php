@@ -16,6 +16,9 @@ $paginacion = $paginacion ?? [
 $flash_ok  = $flash_ok  ?? null;
 $flash_err = $flash_err ?? null;
 $rolLabel = ['admin' => 'Admin', 'cajero' => 'Cajero'];
+// El contador de resultados se pinta abajo, en el pie del panel, junto a los
+// números de paginación (en vez de sobre la tabla). Lo pinta _paginacion.php.
+$pieContador = true;
 // Enlaces de las píldoras: conservan la búsqueda y cambian el rol (vuelven a la página 1)
 $urlFiltro = function (array $extra) use ($q, $fRol): string {
     $params = array_filter(array_merge(['q' => $q, 'rol' => $fRol], $extra), fn($v) => $v !== '' && $v !== null);

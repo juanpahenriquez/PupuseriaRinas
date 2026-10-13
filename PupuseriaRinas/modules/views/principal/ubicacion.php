@@ -68,16 +68,24 @@ $dias = $horariosDesdeAdmin ?? [
 // Página: horarios + mapa + franja de accesos
 ?>
 
-<section class="page-hero">
-    <img class="page-hero-bg" src="assets/img/pexels-allanglezg-30005123.jpg" alt="Pupusería Rinas">
+<section class="nosotros-hero-top">
+    <img class="nosotros-hero-bg" src="assets/img/pexels-allanglezg-30005123.jpg" alt="Pupusería Rinas">
     <div class="container position-relative">
-        <h1 class="display-5 fw-bold text-white mb-2">Ubicación</h1>
-        <p class="lead text-white-50 mb-0"><?php echo $direccion_mostrar; ?></p>
+        <div class="nosotros-head">
+            <span class="nosotros-eyebrow">Horarios y mapa</span>
+            <h1 class="nosotros-title">Ubicación</h1>
+            <p class="nosotros-sub mb-0"><?php echo $direccion_mostrar; ?></p>
+            <span class="nosotros-head-linea" aria-hidden="true"></span>
+        </div>
     </div>
 </section>
 
 <section class="horarios-rinas py-4 py-md-5">
     <div class="container">
+        <div class="mb-3 mb-md-4">
+            <span class="trabaja-eyebrow">Planifica tu visita</span>
+            <h2 class="nosotros-h2 mb-0">Horarios y cómo llegar</h2>
+        </div>
         <div class="row g-0">
             <div class="col-12">
                 <div class="horario-card horario-full">

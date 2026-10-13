@@ -6,10 +6,12 @@
 $productos  = $productos  ?? [];
 $categorias = $categorias ?? [];
 $abiertos   = $abiertos   ?? [];
+$pedidosHoy = $pedidosHoy ?? [];
 $estados    = $estados    ?? ['pendiente', 'cocina', 'listo', 'entregado'];
 $siguiente  = $siguiente  ?? ['pendiente' => 'cocina', 'cocina' => 'listo', 'listo' => 'entregado'];
 $flash_ok   = $flash_ok   ?? null;
 $flash_err  = $flash_err  ?? null;
+$flash_toast = $flash_toast ?? null;
 
 $etiquetaEstado = ['pendiente' => 'Pendiente', 'cocina' => 'En cocina', 'listo' => 'Listo', 'entregado' => 'Entregado'];
 $etiquetaTipo   = ['recoger' => 'Recoger', 'llevar' => 'Llevar'];
@@ -218,36 +220,51 @@ $rangos = array_values(array_filter(array_keys($etiquetaRango), fn($r) => isset(
     </aside>
   </div>
 
-  <!-- ============ Panel de estados de los pedidos en curso ============ -->
+  <!-- ============ Panel de pedidos del día ============ -->
   <div class="modal fade" id="modalEstados" tabindex="-1" aria-labelledby="modalEstadosLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:640px">
       <div class="modal-content" style="border:1px solid #000;border-radius:0">
         <div class="modal-header" style="background:var(--rinas-azul);border-bottom:3px solid var(--rinas-naranja);color:#fff">
           <h5 class="modal-title" id="modalEstadosLabel" style="font-size:0.95rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase">
-            Pedidos en curso
+            Pedidos de hoy
           </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
 
         <div class="modal-body">
-          <?php if (!$abiertos): ?>
+          <?php if (!$pedidosHoy): ?>
             <p class="pos-modal-vacio">
               <i class="fa-solid fa-bell-concierge" aria-hidden="true"></i>
-              No hay pedidos pendientes. Los que cobres aparecerán aquí.
+              No hay pedidos registrados hoy.
             </p>
           <?php else: ?>
-            <!-- Resumen por estado -->
-            <div class="pos-modal-resumen">
-              <span class="pos-resumen-chip pos-resumen-chip--pendiente"><?= (int) $conteoAbiertos['pendiente'] ?> pendiente<?= $conteoAbiertos['pendiente'] == 1 ? '' : 's' ?></span>
-              <span class="pos-resumen-chip pos-resumen-chip--cocina"><?= (int) $conteoAbiertos['cocina'] ?> en cocina</span>
-              <span class="pos-resumen-chip pos-resumen-chip--listo"><?= (int) $conteoAbiertos['listo'] ?> listo<?= $conteoAbiertos['listo'] == 1 ? '' : 's' ?></span>
-            </div>
-
             <div class="pos-modal-lista">
-              <?php foreach ($abiertos as $o): $sig = $siguiente[$o['estado']] ?? null; ?>
+              <?php foreach ($pedidosHoy as $o):
+                $oId = (int) $o['id'];
+                $oItems = $o['items'] ?? [];
+                $payload = [
+                  'id'          => $oId,
+                  'folio'       => $o['folio'] ?: '#' . $oId,
+                  'cliente'     => (string) $o['cliente'],
+                  'telefono'    => (string) $o['telefono'],
+                  'notas'       => (string) $o['notas'],
+                  'tipo'        => (string) $o['tipo'],
+                  'tipoLabel'   => $etiquetaTipo[$o['tipo']] ?? (string) $o['tipo'],
+                  'estado'      => (string) $o['estado'],
+                  'estadoLabel' => $etiquetaEstado[$o['estado']] ?? (string) $o['estado'],
+                  'fecha'       => date('d/m/Y H:i', strtotime($o['creado'])),
+                  'total'       => (float) $o['total'],
+                  'lineas'      => array_map(fn($it) => [
+                    'nombre'   => (string) $it['nombre'],
+                    'cantidad' => (int) $it['cantidad'],
+                    'precio'   => (float) $it['precio'],
+                  ], $oItems),
+                ];
+                $detalleJson = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+              ?>
               <article class="pos-pedido pos-pedido--<?= htmlspecialchars($o['estado']) ?>">
                 <div class="pos-pedido-cab">
-                  <strong class="pos-pedido-folio"><?= htmlspecialchars($o['folio'] ?: '#' . (int) $o['id']) ?></strong>
+                  <strong class="pos-pedido-folio"><?= htmlspecialchars($o['folio'] ?: '#' . $oId) ?></strong>
                   <span class="pos-estado pos-estado--<?= htmlspecialchars($o['estado']) ?>">
                     <?= $etiquetaEstado[$o['estado']] ?? htmlspecialchars($o['estado']) ?>
                   </span>
@@ -265,15 +282,11 @@ $rangos = array_values(array_filter(array_keys($etiquetaRango), fn($r) => isset(
                 <div class="pos-pedido-pie">
                   <span class="pos-pedido-total">$<?= number_format((float) $o['total'], 2) ?></span>
                   <span class="pos-pedido-tipo"><?= $etiquetaTipo[$o['tipo']] ?? htmlspecialchars($o['tipo']) ?></span>
-                  <form method="post" class="pos-pedido-acciones">
-                    <?= csrf_input() ?>
-                    <input type="hidden" name="action" value="estado">
-                    <input type="hidden" name="id" value="<?= (int) $o['id'] ?>">
-                    <button type="submit" name="estado" value="<?= $sig ?? 'entregado' ?>"
-                            class="pos-btn-estado<?= $sig ? '' : ' pos-btn-estado--ok' ?>">
-                      <?= $sig ? htmlspecialchars($etiquetaEstado[$sig]) : 'Entregar' ?>
-                    </button>
-                  </form>
+                  <button type="button" class="btn btn-sm pos-btn-print" data-ticket="<?= htmlspecialchars($detalleJson, ENT_QUOTES) ?>"
+                          title="Imprimir ticket <?= htmlspecialchars($o['folio'] ?: '#' . $oId) ?>"
+                          aria-label="Imprimir ticket <?= htmlspecialchars($o['folio'] ?: '#' . $oId) ?>">
+                    <i class="fa-solid fa-print" aria-hidden="true"></i>
+                  </button>
                 </div>
               </article>
               <?php endforeach; ?>
@@ -289,6 +302,85 @@ $rangos = array_values(array_filter(array_keys($etiquetaRango), fn($r) => isset(
     </div>
   </div>
 </div>
+
+<!-- ===== Ticket térmico (solo se imprime; oculto en pantalla) ===== -->
+<?php if (!empty($ticket)): ?>
+<?php
+  $tkFolio   = $ticket['folio'] ?: ('#' . (int) $ticket['id']);
+  $tkFecha   = date('d/m/Y H:i', strtotime($ticket['creado']));
+  $tkTipo    = $etiquetaTipo[$ticket['tipo']] ?? $ticket['tipo'];
+?>
+<div class="pos-ticket" id="posTicket" aria-hidden="true">
+  <div class="pos-ticket-cabecera">
+    <div class="pos-ticket-negocio">PUPUSERIA RINAS</div>
+    <?php if (!empty($cfgTicket['direccion'])): ?>
+    <div class="pos-ticket-linea"><?= htmlspecialchars($cfgTicket['direccion']) ?></div>
+    <?php endif; ?>
+    <?php if (!empty($cfgTicket['telefono'])): ?>
+    <div class="pos-ticket-linea">Tel. <?= htmlspecialchars($cfgTicket['telefono']) ?></div>
+    <?php endif; ?>
+  </div>
+  <div class="pos-ticket-sep"></div>
+  <div class="pos-ticket-meta"><span>Folio</span><span><b><?= htmlspecialchars($tkFolio) ?></b></span></div>
+  <div class="pos-ticket-meta"><span>Fecha</span><span><?= $tkFecha ?></span></div>
+  <div class="pos-ticket-meta"><span>Tipo</span><span><?= htmlspecialchars($tkTipo) ?></span></div>
+  <div class="pos-ticket-sep"></div>
+  <div class="pos-ticket-cliente">Cliente: <?= htmlspecialchars($ticket['cliente']) ?></div>
+  <?php if (!empty($ticket['telefono'])): ?>
+  <div class="pos-ticket-cliente">Tel: <?= htmlspecialchars($ticket['telefono']) ?></div>
+  <?php endif; ?>
+  <?php if (!empty($ticket['notas'])): ?>
+  <div class="pos-ticket-cliente">Nota: <?= htmlspecialchars($ticket['notas']) ?></div>
+  <?php endif; ?>
+  <div class="pos-ticket-sep"></div>
+  <table class="pos-ticket-items">
+    <thead>
+      <tr>
+        <th>Cant</th>
+        <th>Producto</th>
+        <th class="pos-ticket-importe">Importe</th>
+      </tr>
+    </thead>
+    <tbody>
+    <?php foreach (($ticket['items'] ?? []) as $it): ?>
+      <tr>
+        <td class="pos-ticket-cant"><?= (int) $it['cantidad'] ?>&times;</td>
+        <td class="pos-ticket-nombre"><?= htmlspecialchars($it['nombre']) ?></td>
+        <td class="pos-ticket-importe">$<?= number_format((float) $it['precio'] * (int) $it['cantidad'], 2) ?></td>
+      </tr>
+    <?php endforeach; ?>
+    </tbody>
+  </table>
+  <div class="pos-ticket-sep"></div>
+  <div class="pos-ticket-total"><span>TOTAL</span><span>$<?= number_format((float) $ticket['total'], 2) ?></span></div>
+  <div class="pos-ticket-sep"></div>
+  <div class="pos-ticket-pie">¡Gracias por su compra!</div>
+</div>
+
+<!-- ===== Modal de cobro exitoso: botón para imprimir el ticket ===== -->
+<div class="modal fade" id="modalTicket" tabindex="-1" aria-labelledby="modalTicketLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:360px">
+    <div class="modal-content" style="border:1px solid #000;border-radius:0">
+      <div class="modal-header" style="background:#E6F4EA;border-bottom:1px solid #000;color:#0a7a42">
+        <h5 class="modal-title" id="modalTicketLabel" style="font-size:0.95rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase">
+          <i class="fa-solid fa-circle-check" aria-hidden="true"></i> Cobro realizado
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="mb-1" style="font-weight:700">Pedido <?= htmlspecialchars($tkFolio) ?> cobrado</p>
+        <p style="font-size:1.6rem;font-weight:800;margin:0">$<?= number_format((float) $ticket['total'], 2) ?></p>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid #e9e6d8">
+        <button type="button" class="btn btn-sm btn-admin" style="border:1px solid #000;background:#fff" data-bs-dismiss="modal">Nuevo pedido</button>
+        <button type="button" class="btn btn-sm btn-admin btn-admin--black" id="btnImprimirTicket">
+          <i class="fa-solid fa-print" aria-hidden="true"></i> Imprimir ticket
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
 
 <script>
 (function () {
@@ -499,5 +591,136 @@ $rangos = array_values(array_filter(array_keys($etiquetaRango), fn($r) => isset(
       new bootstrap.Modal(elModal).show();
     }
   <?php endif; ?>
+
+  /* ---------- Ticket: imprimir y modal de cobro exitoso ---------- */
+  var btnImprimir = document.getElementById('btnImprimirTicket');
+  if (btnImprimir) {
+    btnImprimir.addEventListener('click', function () { window.print(); });
+  }
+  var modalTicket = document.getElementById('modalTicket');
+  <?php if (!empty($ticket)): ?>
+  if (modalTicket && typeof bootstrap !== 'undefined') {
+    new bootstrap.Modal(modalTicket).show();
+  }
+  <?php endif; ?>
+
+  /* ---------- Toast de pedido cobrado ---------- */
+  <?php if ($flash_toast): ?>
+  if (typeof Swal !== 'undefined') {
+    var t = <?= json_encode(json_decode((string) $flash_toast, true) ?: ['icon'=>'success','title'=>'Pedido cobrado','text'=>''], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    }).fire({
+      icon: t.icon || 'success',
+      title: t.title || 'Pedido cobrado',
+      text: t.text || ''
+    });
+  }
+  <?php endif; ?>
+
+  /* ---------- Impresión de tickets desde el modal de pedidos ---------- */
+  document.querySelectorAll('.pos-btn-print').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var d;
+      try { d = JSON.parse(btn.getAttribute('data-ticket')); } catch (e) { return; }
+      if (!d) return;
+
+      var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+      }); };
+      var money = function (n) { return '$' + (Number(n) || 0).toFixed(2); };
+
+      var lineas = Array.isArray(d.lineas) ? d.lineas : [];
+      var filas = lineas.length
+        ? lineas.map(function (l) {
+            var importe = (l.precio == null) ? null : (Number(l.precio) * (Number(l.cantidad) || 1));
+            return '<tr><td style="text-align:center">' + (Number(l.cantidad) || 1) + '×</td>'
+                 + '<td>' + esc(l.nombre) + '</td>'
+                 + '<td style="text-align:right">' + (importe == null ? '—' : money(importe)) + '</td></tr>';
+          }).join('')
+        : '<tr><td colspan="3" style="text-align:center;color:#999">Sin productos registrados</td></tr>';
+
+      var html = '<!doctype html>'
+        + '<html lang="es"><head><meta charset="utf-8">'
+        + '<title>Ticket ' + esc(d.folio || '') + '</title>'
+        + '<style>'
+        + '* { margin:0; padding:0; box-sizing:border-box; }'
+        + 'body { font-family: "Courier New", monospace; font-size: 10px; padding: 8px; max-width: 72mm; margin: 0 auto; line-height: 1.3; }'
+        + '.cabecera { text-align: center; margin-bottom: 6px; }'
+        + '.negocio { font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; }'
+        + '.linea { font-size: 9px; margin-top: 2px; }'
+        + '.sep { border-top: 1px dashed #000; margin: 5px 0; }'
+        + '.meta { display: flex; justify-content: space-between; gap: 6px; font-size: 9px; }'
+        + '.cliente { font-size: 9px; margin-top: 3px; }'
+        + 'table { width: 100%; border-collapse: collapse; margin-top: 4px; }'
+        + 'th { text-align: left; font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #000; padding: 2px 0; }'
+        + 'td { padding: 2px 0; vertical-align: top; font-size: 10px; }'
+        + '.cant { width: 22px; white-space: nowrap; text-align: center; }'
+        + '.importe { text-align: right; white-space: nowrap; }'
+        + '.total { display: flex; justify-content: space-between; font-weight: 800; font-size: 14px; margin-top: 4px; }'
+        + '.pie { text-align: center; font-size: 9px; margin-top: 6px; }'
+        + '@page { margin: 2mm; }'
+        + '@media print { body { padding: 0; } }'
+        + '</style></head><body>'
+        + '<div class="cabecera">'
+        + '<div class="negocio">PUPUSERIA RINAS</div>'
+        + '</div>'
+        + '<div class="sep"></div>'
+        + '<div class="meta"><span>Folio</span><span><b>' + esc(d.folio || '') + '</b></span></div>'
+        + '<div class="meta"><span>Fecha</span><span>' + esc(d.fecha || '—') + '</span></div>'
+        + '<div class="meta"><span>Tipo</span><span>' + esc(d.tipoLabel || 'Recoger en tienda') + '</span></div>'
+        + '<div class="sep"></div>'
+        + '<div class="cliente">Cliente: ' + esc(d.cliente || '—') + '</div>'
+        + (d.telefono ? '<div class="cliente">Tel: ' + esc(d.telefono) + '</div>' : '')
+        + (d.notas ? '<div class="cliente">Nota: ' + esc(d.notas) + '</div>' : '')
+        + '<div class="sep"></div>'
+        + '<table><thead><tr><th>Cant</th><th>Producto</th><th class="importe">Importe</th></tr></thead>'
+        + '<tbody>' + filas + '</tbody></table>'
+        + '<div class="sep"></div>'
+        + '<div class="total"><span>TOTAL</span><span>' + money(d.total) + '</span></div>'
+        + '<div class="sep"></div>'
+        + '<div class="pie">¡Gracias por su compra!</div>'
+        + '<script>window.onload = function(){ window.print(); }<\/script>'
+        + '</body></html>';
+
+      var w = window.open('', '_blank', 'width=320,height=500');
+      if (w) {
+        w.document.write(html);
+        w.document.close();
+      }
+    });
+  });
 })();
 </script>
+<?php if ($flash_toast): ?>
+<script src="<?= LINK_SWEETALERT_JS ?>"></script>
+<script>
+(function(){
+  if (typeof Swal === 'undefined') return;
+  var t = <?= json_encode(json_decode((string) $flash_toast, true) ?: ['icon'=>'success','title'=>'Pedido cobrado','text'=>''], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+  Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  }).fire({
+    icon: t.icon || 'success',
+    title: t.title || 'Pedido cobrado',
+    text: t.text || ''
+  });
+})();
+</script>
+<?php endif; ?>

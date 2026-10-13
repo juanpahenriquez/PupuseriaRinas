@@ -313,6 +313,10 @@ $pestanas = [
      cada una monta su ApexCharts la primera vez que se muestra su
      pestaña (dibujar en un panel oculto daría ancho/alto 0).
      ============================================================ */
+  // Máximo de pedidos para escalar correctamente el eje secundario
+  const maxPedidos = Math.max(1, ...D.pedidosSemana, ...D.pedidosMes);
+  const maxPedidosAxis = Math.max(5, Math.ceil(maxPedidos / 5) * 5);
+
   const fabricas = {
     ventas: function (el) {
       const ch = montar(el, {
@@ -331,10 +335,10 @@ $pestanas = [
         xaxis: { categories: D.dias, labels: { style: { colors: '#111', fontWeight: 700 } }, axisBorder: { show: false }, axisTicks: { show: false } },
         yaxis: [
           { labels: { formatter: v => '$' + v, style: { colors: '#6c757d' } } },
-          { opposite: true, labels: { formatter: v => v + ' ped', style: { colors: '#6c757d' } } }
+          { opposite: true, min: 0, max: maxPedidosAxis, labels: { formatter: v => v + ' ped', style: { colors: '#6c757d' } } }
         ],
         grid: { borderColor: 'rgba(11,11,69,0.07)', strokeDashArray: 4, padding: { top: 8 } },
-        plotOptions: { bar: { borderRadius: 6, columnWidth: '34%', borderRadiusApplication: 'end' } },
+        plotOptions: { bar: { borderRadius: 4, columnWidth: '50%', borderRadiusApplication: 'end' } },
         tooltip: { shared: true, intersect: false, theme: 'dark', y: { formatter: (v, ctx) => ctx.seriesIndex === 0 ? money(v) : v + ' pedidos' } },
         legend: { show: false },
         noData: { text: 'Sin ventas para mostrar' }

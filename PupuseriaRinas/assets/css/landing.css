@@ -1193,50 +1193,9 @@
 }
 
 /* --------------------------------------------------- cabecera (landing) - */
-/* La cabecera es compartida con el resto del sitio, así que todo lo de aquí va
-   acotado a .pagina-landing y las otras páginas no cambian. */
-.pagina-landing .navbar-rinas .nav-link {
-    font-size: 0.82rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    text-decoration: none;
-}
-
-.pagina-landing .navbar-rinas .nav-link:hover {
-    text-decoration: none;
-}
-
-/* El logo es un JPG de fondo crema: sobre el hero oscuro funciona como un
-   círculo de la paleta en lugar de un cuadrado con borde. */
-.pagina-landing .logo-rinas {
-    border-radius: 50% !important;
-}
-
-.pagina-landing .header-rinas.scrolled .navbar-rinas {
-    background-color: var(--nl-azul);
-    border-bottom-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 4px 18px rgba(11, 11, 69, 0.28);
-}
-
-/* Fuera las franjas diagonales: belongenece al diseño anterior y choca con el
-   lenguaje plano del nuevo bloque. */
-.pagina-landing .header-rinas.scrolled .navbar-rinas::before,
-.pagina-landing .header-rinas.scrolled .navbar-rinas::after {
-    display: none;
-}
-
-.pagina-landing .header-rinas.scrolled .navbar-rinas .nav-link:hover {
-    color: orange;
-}
-
-.pagina-landing .header-rinas.scrolled .navbar-rinas .navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-.pagina-landing .header-rinas.scrolled .navbar-rinas .navbar-toggler-icon {
-    filter: none;
-}
+/* La cabecera es compartida con el resto del sitio, así que su estilo vive en
+   custom.css: transparente sobre el hero y azul marino al scrollear, igual en
+   landing, menú, ubicación y nosotros. Aquí no se repite nada. */
 
 /* ------------------------------------------------------- animaciones ---- */
 /* El marcado se anima solo cuando JS está presente (la clase .js la pone el

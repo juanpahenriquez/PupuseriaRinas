@@ -58,6 +58,32 @@ function db(bool $fatale = true): ?PDO
         . '<small>' . htmlspecialchars($ultimoError->getMessage() ?? '') . '</small>');
 }
 
+/**
+ * Valor guardado en la tabla de configuración (fail-silent).
+ *
+ * La consulta se hace una sola vez por petición: el sidebar, la cabecera y las
+ * vistas públicas pueden pedir valores sin repetir la consulta en cada include.
+ * Si MySQL no responde o la tabla aún no existe, devuelve el valor por defecto.
+ */
+function config_valor(string $clave, string $defecto = ''): string
+{
+    static $cache = null;
+    if ($cache === null) {
+        $cache = [];
+        $pdo = db(false);
+        if ($pdo) {
+            try {
+                foreach ($pdo->query("SELECT clave, valor FROM configuracion") as $fila) {
+                    $cache[(string) $fila['clave']] = (string) $fila['valor'];
+                }
+            } catch (PDOException $e) {
+                // sin tabla o sin datos: se usan los valores por defecto
+            }
+        }
+    }
+    return $cache[$clave] ?? $defecto;
+}
+
 /** Crea tablas si no existen e importa datos iniciales. */
 function instalar_esquema(PDO $pdo): void
 {

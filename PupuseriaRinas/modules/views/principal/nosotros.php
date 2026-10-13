@@ -96,34 +96,112 @@
     </div>
 </section>
 
-<section class="galeria-rinas py-4 py-md-5">
+<!-- ============================================================================
+     Galería · bloque oscuro al estilo del landing: una foto grande que manda y
+     una retícula editorial alrededor. Todo se amplía en el lightbox de abajo.
+     ============================================================================ -->
+<section class="galeria-rinas" id="galeria" aria-labelledby="galeriaTitulo">
+    <span class="galeria-filete" aria-hidden="true"></span>
+
     <div class="container">
-        <div class="galeria-head">
-            <div>
-                <span class="trabaja-eyebrow">ASÍ SE VE RINAS</span>
-                <h2 class="nosotros-h2 mb-0">Galería</h2>
+        <header class="galeria-head">
+            <div class="galeria-head-copy">
+                <span class="trabaja-eyebrow galeria-eyebrow">Así se ve Rinas</span>
+                <h2 class="galeria-titulo" id="galeriaTitulo">Galería</h2>
+                <p class="galeria-lead">Recién salidas del comal, el ambiente de la casa y los licuados que acompañan. Toca una foto para verla en grande.</p>
             </div>
             <span class="galeria-head-linea" aria-hidden="true"></span>
-        </div>
-        <div class="row g-4 mt-1">
-            <div class="col-12 col-md-4">
-                <figure class="galeria-card">
-                    <img src="assets/img/galeria_1_600.jpg?v=<?= LINK_CSS_VERSION ?>" alt="Ambiente Pupusería Rinas" loading="lazy">
-                    <figcaption>Ambiente Rinas</figcaption>
-                </figure>
-            </div>
-            <div class="col-12 col-md-4">
-                <figure class="galeria-card galeria-card-producto">
-                    <img src="assets/img/especialidad_loroco.png" alt="Pupusa con flor de loroco" loading="lazy">
-                    <figcaption>Con flor de loroco</figcaption>
-                </figure>
-            </div>
-            <div class="col-12 col-md-4">
-                <figure class="galeria-card galeria-card-producto">
-                    <img src="assets/img/pupa_pollo.png" alt="Pupusa de pollo Rinas" loading="lazy">
-                    <figcaption>Pupusa de pollo</figcaption>
-                </figure>
-            </div>
+            <p class="galeria-head-meta"><b>08</b> fotos</p>
+        </header>
+
+        <div class="galeria-grid">
+            <figure class="galeria-card galeria-card--xl">
+                <img src="assets/img/galeria/pupusas-comal.jpg?v=<?= LINK_CSS_VERSION ?>" alt="Pupusas recién salidas del comal" loading="lazy" decoding="async">
+                <span class="galeria-card-zoom" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </span>
+                <figcaption class="galeria-card-pie">
+                    <span class="galeria-card-num">01</span>
+                    <span class="galeria-card-titulo">Directo del comal</span>
+                </figcaption>
+            </figure>
+
+            <figure class="galeria-card galeria-card--producto">
+                <img src="assets/img/pupa_camaron.png" alt="Pupusa de camarón Rinas" loading="lazy" decoding="async">
+                <span class="galeria-card-zoom" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </span>
+                <figcaption class="galeria-card-pie">
+                    <span class="galeria-card-num">02</span>
+                    <span class="galeria-card-titulo">Sabor Mediterráneo</span>
+                </figcaption>
+            </figure>
+
+            <figure class="galeria-card galeria-card--producto">
+                <img src="assets/img/pupa_pollo.png" alt="Pupusa de pollo Rinas" loading="lazy" decoding="async">
+                <span class="galeria-card-zoom" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </span>
+                <figcaption class="galeria-card-pie">
+                    <span class="galeria-card-num">03</span>
+                    <span class="galeria-card-titulo">De pollo</span>
+                </figcaption>
+            </figure>
+
+            <figure class="galeria-card galeria-card--ancha">
+                <img src="assets/img/galeria_1_600.jpg?v=<?= LINK_CSS_VERSION ?>" alt="El ambiente de Pupusería Rinas" loading="lazy" decoding="async">
+                <span class="galeria-card-zoom" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </span>
+                <figcaption class="galeria-card-pie">
+                    <span class="galeria-card-num">04</span>
+                    <span class="galeria-card-titulo">El ambiente de la casa</span>
+                </figcaption>
+            </figure>
+
+            <figure class="galeria-card galeria-card--producto">
+                <img src="assets/img/especialidad_loroco.png" alt="Pupusa con flor de loroco" loading="lazy" decoding="async">
+                <span class="galeria-card-zoom" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </span>
+                <figcaption class="galeria-card-pie">
+                    <span class="galeria-card-num">05</span>
+                    <span class="galeria-card-titulo">Con flor de loroco</span>
+                </figcaption>
+            </figure>
+
+            <figure class="galeria-card galeria-card--producto">
+                <img src="assets/img/licuado.png" alt="Licuado de la casa" loading="lazy" decoding="async">
+                <span class="galeria-card-zoom" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </span>
+                <figcaption class="galeria-card-pie">
+                    <span class="galeria-card-num">06</span>
+                    <span class="galeria-card-titulo">Licuado de la casa</span>
+                </figcaption>
+            </figure>
+
+            <figure class="galeria-card">
+                <img src="assets/img/galeria/pupusas-mesa.jpg" alt="Pupusas servidas en la mesa" loading="lazy" decoding="async">
+                <span class="galeria-card-zoom" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </span>
+                <figcaption class="galeria-card-pie">
+                    <span class="galeria-card-num">07</span>
+                    <span class="galeria-card-titulo">Recién servidas</span>
+                </figcaption>
+            </figure>
+
+            <figure class="galeria-card galeria-card--producto">
+                <img src="assets/img/pupa_chile.png" alt="Pupusa con chile" loading="lazy" decoding="async">
+                <span class="galeria-card-zoom" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </span>
+                <figcaption class="galeria-card-pie">
+                    <span class="galeria-card-num">08</span>
+                    <span class="galeria-card-titulo">Con su punta</span>
+                </figcaption>
+            </figure>
         </div>
     </div>
 </section>
@@ -156,13 +234,28 @@
   var idx = 0;
   var focoPrevio = null;
 
+  function texto(fig) {
+    var cap = fig.querySelector('figcaption');
+    if (!cap) return 'imagen de la galería';
+    /* El título va en su propio span para que el número (01, 02…) no se lea
+       como parte del pie de foto. */
+    var titulo = cap.querySelector('.galeria-card-titulo');
+    return (titulo ? titulo.textContent : cap.textContent).trim();
+  }
+
   function abrir(i) {
     idx = (i + cards.length) % cards.length;
     var foto = cards[idx].querySelector('img');
-    var cap = cards[idx].querySelector('figcaption');
     img.src = foto.dataset.full || foto.src;
     img.alt = foto.alt;
-    pie.textContent = cap ? cap.textContent : '';
+    /* La foto vuelve a entrar con fundido: al cambiar el src el navegador
+       reutiliza el mismo <img> y el cambio pega un salto seco. */
+    pie.innerHTML = '';
+    var contador = document.createElement('span');
+    contador.className = 'lightbox-contador';
+    contador.textContent = ('0' + (idx + 1)).slice(-2) + ' / ' + ('0' + cards.length).slice(-2);
+    pie.appendChild(contador);
+    pie.appendChild(document.createTextNode(texto(cards[idx])));
     focoPrevio = document.activeElement;
     overlay.hidden = false;
     document.body.style.overflow = 'hidden';
@@ -181,8 +274,7 @@
   cards.forEach(function (fig, i) {
     fig.setAttribute('tabindex', '0');
     fig.setAttribute('role', 'button');
-    var cap = fig.querySelector('figcaption');
-    fig.setAttribute('aria-label', 'Ampliar: ' + (cap ? cap.textContent : 'imagen de la galería'));
+    fig.setAttribute('aria-label', 'Ampliar: ' + texto(fig));
     fig.addEventListener('click', function () { abrir(i); });
     fig.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(i); }
@@ -199,5 +291,61 @@
     else if (e.key === 'ArrowLeft') mover(-1);
     else if (e.key === 'ArrowRight') mover(1);
   });
+})();
+
+/* Entrada de la galería: mismo criterio que el landing, sin IntersectionObserver
+   (si el navegador no entrega esos callbacks el contenido se quedaría oculto).
+   El escalonado viaja en una variable CSS que lee el transition-delay. */
+(function () {
+  var grid = document.querySelector('.galeria-grid');
+  if (!grid) return;
+
+  var tarjetas = Array.prototype.slice.call(grid.querySelectorAll('.galeria-card'));
+  tarjetas.forEach(function (t, i) {
+    t.style.setProperty('--galeria-delay', (i * 70) + 'ms');
+  });
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    tarjetas.forEach(function (t) { t.classList.add('is-in'); });
+    return;
+  }
+
+  var pendientes = tarjetas.slice();
+  var agendado = false;
+
+  function revisar() {
+    var vh = window.innerHeight;
+    var quedan = [];
+    pendientes.forEach(function (t) {
+      var r = t.getBoundingClientRect();
+      /* Entra al asomar por el borde inferior, con un 12% de margen */
+      if (r.top < vh * 0.88 && r.bottom > 0) t.classList.add('is-in');
+      else quedan.push(t);
+    });
+    pendientes = quedan;
+    if (!pendientes.length) {
+      window.removeEventListener('scroll', alScroll);
+      window.removeEventListener('resize', alScroll);
+    }
+  }
+
+  function alScroll() {
+    if (agendado) return;
+    agendado = true;
+    requestAnimationFrame(function () { agendado = false; revisar(); });
+  }
+
+  window.addEventListener('scroll', alScroll, { passive: true });
+  window.addEventListener('resize', alScroll);
+  revisar();
+
+  /* Red de seguridad: si algo no se revela (una pestaña que el navegador no
+     pinta, un rAF que no llega), a los 3 s se muestra todo igual. Una galería
+     escondida es peor que una galería sin animación. */
+  setTimeout(function () {
+    if (!pendientes.length) return;
+    pendientes.forEach(function (t) { t.classList.add('is-in'); });
+    pendientes = [];
+  }, 3000);
 })();
 </script>
