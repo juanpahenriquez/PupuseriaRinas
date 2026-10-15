@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../app/inicio.php';
+require_once __DIR__ . '/../app/sesion.php';
 
 if (usuario_actual()) {
     header('Location: index.php');
@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?><!doctype html>
 <html lang="es">
 <head>
-<?php $page_title = 'Login'; include __DIR__ . "/../modules/views/layouts/head-admin.php"; ?>
+<?php $page_title = 'Login'; include __DIR__ . "/../vistas/plantillas/admin_cabeza.php"; ?>
 <link rel="stylesheet" href="<?= LINK_SWEETALERT_CSS ?>">
 <script src="<?= LINK_SWEETALERT_JS ?>"></script>
 </head>
 <body>
-<?php include __DIR__ . "/../modules/views/admin/login.php"; ?>
+<?php include __DIR__ . "/../vistas/admin/login.php"; ?>
 </body>
 </html>

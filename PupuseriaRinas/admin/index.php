@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../app/inicio.php';
+require_once __DIR__ . '/../app/sesion.php';
 requerir_login();
 
 $pdo = db();
@@ -131,13 +131,13 @@ $mock = [
 ?><!doctype html>
 <html lang="es">
 <head>
-<?php $page_title='Dashboard'; include __DIR__ . "/../modules/views/layouts/head-admin.php"; ?>
+<?php $page_title='Dashboard'; include __DIR__ . "/../vistas/plantillas/admin_cabeza.php"; ?>
 </head>
 <body class="admin-body admin-dash-body">
-<?php $admin_active='dashboard'; include __DIR__ . "/../modules/views/layouts/sidebar.php"; ?>
+<?php $admin_active='dashboard'; include __DIR__ . "/../vistas/plantillas/admin_barra.php"; ?>
 <div class="admin-main">
-<?php $admin_title='Dashboard'; $admin_sub='Resumen operativo · ' . date('d/m/Y'); include __DIR__ . "/../modules/views/layouts/header-admin.php"; ?>
-<main class="admin-content"><?php include __DIR__ . "/../modules/views/admin/dashboard.php"; ?></main>
+<?php $admin_title='Dashboard'; $admin_sub='Resumen operativo · ' . date('d/m/Y'); include __DIR__ . "/../vistas/plantillas/admin_cabecera.php"; ?>
+<main class="admin-content"><?php include __DIR__ . "/../vistas/admin/dashboard.php"; ?></main>
 </div>
 </body>
 </html>

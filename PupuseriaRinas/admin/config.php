@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../app/inicio.php';
+require_once __DIR__ . '/../app/sesion.php';
 requerir_login();
 
 $pdo = db();
@@ -100,13 +100,13 @@ $hayConfig = array_filter($config, fn($v) => $v !== '');
 ?><!doctype html>
 <html lang="es">
 <head>
-<?php $page_title='Configuración'; include __DIR__ . "/../modules/views/layouts/head-admin.php"; ?>
+<?php $page_title='Configuración'; include __DIR__ . "/../vistas/plantillas/admin_cabeza.php"; ?>
 </head>
 <body class="admin-body">
-<?php $admin_active='config'; include __DIR__ . "/../modules/views/layouts/sidebar.php"; ?>
+<?php $admin_active='config'; include __DIR__ . "/../vistas/plantillas/admin_barra.php"; ?>
 <div class="admin-main">
-<?php $admin_title='Configuración'; $admin_sub=$hayConfig ? 'Datos del negocio guardados' : 'Sin configurar aún'; include __DIR__ . "/../modules/views/layouts/header-admin.php"; ?>
-<main class="admin-content"><?php include __DIR__ . "/../modules/views/admin/config.php"; ?></main>
+<?php $admin_title='Configuración'; $admin_sub=$hayConfig ? 'Datos del negocio guardados' : 'Sin configurar aún'; include __DIR__ . "/../vistas/plantillas/admin_cabecera.php"; ?>
+<main class="admin-content"><?php include __DIR__ . "/../vistas/admin/config.php"; ?></main>
 </div>
 </body>
 </html>

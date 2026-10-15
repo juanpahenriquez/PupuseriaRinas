@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../app/inicio.php';
+require_once __DIR__ . '/../app/sesion.php';
 requerir_login();
 
 $pdo = db();
@@ -159,13 +159,13 @@ $paginacion = [
 ?><!doctype html>
 <html lang="es">
 <head>
-<?php $page_title='Usuarios'; include __DIR__ . "/../modules/views/layouts/head-admin.php"; ?>
+<?php $page_title='Usuarios'; include __DIR__ . "/../vistas/plantillas/admin_cabeza.php"; ?>
 </head>
 <body class="admin-body">
-<?php $admin_active='usuarios'; include __DIR__ . "/../modules/views/layouts/sidebar.php"; ?>
+<?php $admin_active='usuarios'; include __DIR__ . "/../vistas/plantillas/admin_barra.php"; ?>
 <div class="admin-main">
-<?php $admin_title='Usuarios'; $admin_sub=$total . ' cuentas · ' . $admins . ' admin · ' . $cajeros . ' cajeros'; include __DIR__ . "/../modules/views/layouts/header-admin.php"; ?>
-<main class="admin-content"><?php include __DIR__ . "/../modules/views/admin/usuarios.php"; ?></main>
+<?php $admin_title='Usuarios'; $admin_sub=$total . ' cuentas · ' . $admins . ' admin · ' . $cajeros . ' cajeros'; include __DIR__ . "/../vistas/plantillas/admin_cabecera.php"; ?>
+<main class="admin-content"><?php include __DIR__ . "/../vistas/admin/usuarios.php"; ?></main>
 </div>
 </body>
 </html>

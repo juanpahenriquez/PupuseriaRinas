@@ -4,9 +4,9 @@
  * Crea pedidos en la tabla `pedidos` (estado 'pendiente') y permite
  * avanzar los estados desde la misma vista.
  */
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../config/auth.php';
-require_once __DIR__ . '/../php/enlaces.php';
+require_once __DIR__ . '/../app/inicio.php';
+require_once __DIR__ . '/../app/sesion.php';
+require_once __DIR__ . '/../app/inicio.php';
 requerir_login();
 
 $pdo = db();
@@ -236,8 +236,7 @@ unset($_SESSION['flash_toast']);
 ?><!doctype html>
 <html lang="es">
 <head>
-<?php $page_title = 'POS'; include __DIR__ . '/../modules/views/layouts/head-admin.php'; ?>
-<link rel="stylesheet" href="../assets/css/pos.css?v=6">
+<?php $page_title = 'POS'; include __DIR__ . '/../vistas/plantillas/admin_cabeza.php'; ?>
 <script>
 /* Modo pantalla completa del POS. Se aplica ANTES de pintar el <body> para que
    el sidebar no aparezca un instante y se oculte después (mismo truco que usa
@@ -252,15 +251,15 @@ unset($_SESSION['flash_toast']);
 </script>
 </head>
 <body class="admin-body pos-body">
-<?php $admin_active = 'pos'; include __DIR__ . '/../modules/views/layouts/sidebar.php'; ?>
+<?php $admin_active = 'pos'; include __DIR__ . '/../vistas/plantillas/admin_barra.php'; ?>
 <div class="admin-main">
 <?php
 $admin_title = 'POS';
 $admin_sub   = 'Punto de venta';
-include __DIR__ . '/../modules/views/layouts/header-admin.php';
+include __DIR__ . '/../vistas/plantillas/admin_cabecera.php';
 ?>
 <main class="admin-content pos-content">
-<?php include __DIR__ . '/../modules/views/admin/pos.php'; ?>
+<?php include __DIR__ . '/../vistas/admin/pos.php'; ?>
 </main>
 </div>
 </body>
